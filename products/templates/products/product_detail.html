@@ -1,0 +1,47 @@
+
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-xxl py-5 mt-5">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Product Image -->
+            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.1s">
+                <div class="border rounded overflow-hidden p-3 bg-light">
+                    <img class="img-fluid w-100" src="{% static 'core/img/product-1.jpg' %}" alt="">
+                </div>
+            </div>
+            <!-- Product Info -->
+            <div class="col-lg-6 wow fadeIn" data-wow-delay="0.5s">
+                <h1 class="display-6 mb-3">Fresh Organic Tomato</h1>
+                <div class="d-flex mb-3">
+                    <div class="text-primary me-2">
+                        <small class="fa fa-star"></small>
+                        <small class="fa fa-star"></small>
+                        <small class="fa fa-star"></small>
+                        <small class="fa fa-star"></small>
+                        <small class="fa fa-star-half-alt"></small>
+                    </div>
+                    <small>(50 Reviews)</small>
+                </div>
+                <h3 class="text-primary mb-4">$15.00 <del class="text-muted h5 ms-2">$25.00</del></h3>
+                <p class="mb-4">Our organic tomatoes are grown without pesticides, hand-picked at peak ripeness to ensure the best flavor and nutritional value for your family.</p>
+                
+                <div class="d-flex align-items-center mb-4">
+                    <div class="input-group me-3" style="width: 130px;">
+                        <button class="btn btn-outline-primary">-</button>
+                        <input type="text" class="form-control text-center" value="1">
+                        <button class="btn btn-outline-primary">+</button>
+                    </div>
+                    <button class="btn btn-primary rounded-pill py-3 px-5"><i class="fa fa-shopping-bag me-2"></i>Add To Cart</button>
+                </div>
+                
+                <div class="border-top pt-4">
+                    <p class="mb-1 text-dark"><strong>Category:</strong> Vegetables</p>
+                    <p class="mb-1 text-dark"><strong>Tags:</strong> Organic, Fresh, Healthy</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

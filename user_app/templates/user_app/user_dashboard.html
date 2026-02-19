@@ -1,0 +1,81 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="container-fluid page-header mb-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container">
+        <h1 class="display-3 mb-3 animated slideInDown">My Dashboard</h1>
+    </div>
+</div>
+
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Sidebar Navigation -->
+            <div class="col-lg-3">
+                <div class="nav flex-column nav-pills me-3 shadow-sm rounded p-3 bg-light" id="v-pills-tab" role="tablist">
+                    <button class="nav-link active mb-2" id="v-pills-profile-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profile" type="button">Update Profile</button>
+                    <button class="nav-link mb-2" id="v-pills-orders-tab" data-bs-toggle="pill" data-bs-target="#v-pills-orders" type="button">Order History</button>
+                    <a href="#" class="nav-link text-danger">Logout</a>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="col-lg-9">
+                <div class="tab-content" id="v-pills-tabContent">
+                    <!-- Update Profile Section -->
+                    <div class="tab-pane fade show active" id="v-pills-profile">
+                        <h3 class="mb-4">Personal Information</h3>
+                        <form class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">First Name</label>
+                                <input type="text" class="form-control" value="Fareed">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" value="fareed@example.com">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Shipping Address</label>
+                                <textarea class="form-control">123 Organic Lane, NY</textarea>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary rounded-pill py-2 px-4">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Order History Section -->
+                    <div class="tab-pane fade" id="v-pills-orders">
+                        <h3 class="mb-4">Your Orders</h3>
+                        <div class="table-responsive">
+                            <table class="table table-hover border">
+                                <thead class="bg-primary text-white">
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Date</th>
+                                        <th>Status</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#FD-9921</td>
+                                        <td>Oct 12, 2025</td>
+                                        <td><span class="badge bg-success">Delivered</span></td>
+                                        <td>$45.00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>#FD-8810</td>
+                                        <td>Oct 05, 2025</td>
+                                        <td><span class="badge bg-warning text-dark">Shipped</span></td>
+                                        <td>$22.50</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

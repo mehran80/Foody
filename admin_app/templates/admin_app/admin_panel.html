@@ -1,0 +1,203 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+<!-- Modern Admin CSS Fix -->
+<style>
+    .admin-sidebar { min-height: 80vh; background: #f8f9fa; border-right: 1px solid #dee2e6; }
+    .nav-pills .nav-link { color: #555; font-weight: 500; margin-bottom: 10px; }
+    .nav-pills .nav-link.active { background-color: #3CB815; color: white; }
+    .stat-card { border: none; border-radius: 15px; transition: transform 0.3s; }
+    .stat-card:hover { transform: translateY(-5px); }
+    .table img { width: 40px; height: 40px; object-fit: cover; border-radius: 5px; }
+    .badge-pending { background-color: #ffc107; color: #000; }
+    .badge-success { background-color: #3CB815; color: #fff; }
+</style>
+
+<div class="container-fluid py-5 mt-5">
+    <div class="row px-4">
+        
+        <!-- Sidebar Navigation -->
+        <div class="col-lg-2 admin-sidebar p-3 rounded">
+            <h4 class="mb-4 text-primary">Admin Panel</h4>
+            <div class="nav flex-column nav-pills" id="adminTab" role="tablist">
+                <button class="nav-link active text-start" data-bs-toggle="pill" data-bs-target="#tab-overview"><i class="fa fa-chart-line me-2"></i> Overview</button>
+                <button class="nav-link text-start" data-bs-toggle="pill" data-bs-target="#tab-products"><i class="fa fa-leaf me-2"></i> Products</button>
+                <button class="nav-link text-start" data-bs-toggle="pill" data-bs-target="#tab-orders"><i class="fa fa-shopping-cart me-2"></i> Orders</button>
+                <button class="nav-link text-start" data-bs-toggle="pill" data-bs-target="#tab-users"><i class="fa fa-users me-2"></i> Customers</button>
+                <hr>
+                <a href="{% url 'home' %}" class="nav-link text-start text-secondary"><i class="fa fa-eye me-2"></i> View Site</a>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="col-lg-10 ps-lg-4">
+            <div class="tab-content">
+                
+                <!-- 1. OVERVIEW SECTION -->
+                <div class="tab-pane fade show active" id="tab-overview">
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-3">
+                            <div class="card stat-card bg-primary text-white p-3">
+                                <h5>Total Sales</h5>
+                                <h3>$12,450</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stat-card bg-secondary text-white p-3">
+                                <h5>Active Orders</h5>
+                                <h3>25</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stat-card bg-info text-white p-3">
+                                <h5>Total Products</h5>
+                                <h3>142</h3>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stat-card bg-dark text-white p-3">
+                                <h5>New Users</h5>
+                                <h3>89</h3>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-4 rounded shadow-sm">
+                        <h5 class="mb-4">Recent Notifications</h5>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><i class="fa fa-circle text-warning me-2"></i> New order received from Fareed (#FD-102)</li>
+                            <li class="list-group-item"><i class="fa fa-circle text-danger me-2"></i> Product "Organic Apple" is out of stock</li>
+                            <li class="list-group-item"><i class="fa fa-circle text-success me-2"></i> New user registered: Sarah Jones</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- 2. PRODUCT MANAGEMENT SECTION -->
+                <div class="tab-pane fade" id="tab-products">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3>Manage Inventory</h3>
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">+ Add Product</button>
+                    </div>
+                    <div class="table-responsive bg-white p-3 rounded shadow-sm">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><img src="{% static 'user_app/img/product-1.jpg' %}"></td>
+                                    <td>Fresh Tomato</td>
+                                    <td>$15.00</td>
+                                    <td>45 kg</td>
+                                    <td><span class="badge bg-success">In Stock</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 3. ORDER MANAGEMENT SECTION -->
+                <div class="tab-pane fade" id="tab-orders">
+                    <h3 class="mb-4">Customer Orders</h3>
+                    <div class="table-responsive bg-white p-3 rounded shadow-sm">
+                        <table class="table table-hover">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#FD-9921</td>
+                                    <td>Fareed Khan</td>
+                                    <td>20 Oct, 2025</td>
+                                    <td>$45.50</td>
+                                    <td><span class="badge badge-pending">Pending</span></td>
+                                    <td><button class="btn btn-sm btn-secondary">View</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 4. USER MANAGEMENT SECTION -->
+                <div class="tab-pane fade" id="tab-users">
+                    <h3 class="mb-4">Registered Customers</h3>
+                    <div class="table-responsive bg-white p-3 rounded shadow-sm">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>User ID</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Joined Date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#USR-001</td>
+                                    <td>John Doe</td>
+                                    <td>john@example.com</td>
+                                    <td>12 Jan, 2025</td>
+                                    <td><span class="badge bg-success">Active</span></td>
+                                    <td><button class="btn btn-sm btn-danger">Block</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Adding Product -->
+<div class="modal fade" id="addProductModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Product Name</label>
+                        <input type="text" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Price ($)</label>
+                        <input type="number" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Product Image</label>
+                        <input type="file" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Upload Product</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

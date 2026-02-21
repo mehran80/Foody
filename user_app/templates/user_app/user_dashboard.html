@@ -21,61 +21,16 @@
             <!-- Content Area -->
             <div class="col-lg-9">
                 <div class="tab-content" id="v-pills-tabContent">
+                    
                     <!-- Update Profile Section -->
-                    <div class="tab-pane fade show active" id="v-pills-profile">
-                        <h3 class="mb-4">Personal Information</h3>
-                        <form class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">First Name</label>
-                                <input type="text" class="form-control" value="Fareed">
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Email</label>
-                                <input type="email" class="form-control" value="fareed@example.com">
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label">Shipping Address</label>
-                                <textarea class="form-control">123 Organic Lane, NY</textarea>
-                            </div>
-                            <div class="col-12">
-                                <button class="btn btn-primary rounded-pill py-2 px-4">Save Changes</button>
-                            </div>
-                        </form>
-                    </div>
+                     {% include "user_app/includes/user_profile_update.html" %}
 
                     <!-- Order History Section -->
-                    <div class="tab-pane fade" id="v-pills-orders">
-                        <h3 class="mb-4">Your Orders</h3>
-                        <div class="table-responsive">
-                            <table class="table table-hover border">
-                                <thead class="bg-primary text-white">
-                                    <tr>
-                                        <th>Order ID</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>#FD-9921</td>
-                                        <td>Oct 12, 2025</td>
-                                        <td><span class="badge bg-success">Delivered</span></td>
-                                        <td>$45.00</td>
-                                    </tr>
-                                    <tr>
-                                        <td>#FD-8810</td>
-                                        <td>Oct 05, 2025</td>
-                                        <td><span class="badge bg-warning text-dark">Shipped</span></td>
-                                        <td>$22.50</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                     {% include "user_app/includes/order_list.html" %}
+                    
                 </div>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
+{% endblock content%}

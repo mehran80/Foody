@@ -1,8 +1,8 @@
 
 <div class="container-fluid fixed-top px-0 wow fadeIn" data-wow-delay="0.1s">
-        {% block content %}
+    {% block content%}
         {% include 'core/includes/nav_header.html' %}
-        {% endblock %}
+    {% endblock content %}
 
         <nav class="navbar navbar-expand-lg navbar-light py-lg-0 px-lg-5 wow fadeIn" data-wow-delay="0.1s">
             <a href="index.html" class="navbar-brand ms-4 ms-lg-0">
@@ -30,9 +30,25 @@
                     <a class="btn-sm-square bg-white rounded-circle ms-3" href="">
                         <small class="fa fa-search text-body"></small>
                     </a>
-                    <a class="btn-sm-square bg-white rounded-circle ms-3" href="{% url 'login' %}">
+                    <!-- DYNAMIC LOGIN/LOGOUT ICONS -->
+                {% if user.is_authenticated %}
+                    <!-- If Logged In: Show User Icon with a Dropdown -->
+                    <div class="nav-item dropdown">
+                        <a href="#" class="btn-sm-square bg-white rounded-circle ms-3 dropdown-toggle" data-bs-toggle="dropdown">
+                            <small class="fa fa-user text-primary"></small>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end m-0">
+                            <span class="dropdown-item border-bottom">Hi, {{ user.username }}</span>
+                            <a href="{% url 'user_app:user_profile' %}" class="dropdown-item">My Profile</a>
+                            <a href="{% url 'user_app:logout' %}" class="dropdown-item text-danger">Logout</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- If Logged Out: Just show the User icon pointing to Login -->
+                    <a class="btn-sm-square bg-white rounded-circle ms-3" href="{% url 'user_app:login' %}">
                         <small class="fa fa-user text-body"></small>
                     </a>
+                {% endif %}
                     <a class="btn-sm-square bg-white rounded-circle ms-3" href="">
                         <small class="fa fa-shopping-bag text-body"></small>
                     </a>

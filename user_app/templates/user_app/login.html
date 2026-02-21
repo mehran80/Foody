@@ -24,21 +24,18 @@
                         <h1 class="display-5 mb-3">Login</h1>
                         <p>Welcome back to Foody!</p>
                     </div>
-                    <form action="#" method="POST">
+                    <form action="" method="POST">
                         {% csrf_token %}
                         <div class="row g-3">
-                            <div class="col-12">
-                                <div class="form-floating">
-                                    <input type="email" class="form-control" id="email" placeholder="Your Email">
-                                    <label for="email">Email Address</label>
+                            {% for field in form %}
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        {{ field }}
+                                        <label for="{{field.id_label}}">{{field.label}}</label>
+                                    </div>
+                                    <small class='text_danger'>{{ field.error }}</small>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-floating">
-                                    <input type="password" class="form-control" id="pass" placeholder="Password">
-                                    <label for="pass">Password</label>
-                                </div>
-                            </div>
+                            {% endfor %}
                             <div class="col-12">
                                 <button class="btn btn-primary rounded-pill py-3 px-5 w-100" type="submit">Login</button>
                             </div>

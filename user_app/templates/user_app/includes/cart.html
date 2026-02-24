@@ -1,56 +1,60 @@
 {% extends 'core/base.html' %}
 {% block content %}
-<div class="container-xxl py-5 mt-5">
+  <div class="container-xxl py-5 mt-5">
     <div class="container">
-        <h1 class="mb-5">Your Shopping Cart</h1>
-        <div class="row g-5">
-            <div class="col-lg-8">
-                <div class="table-responsive">
-                    <table class="table align-middle border">
-                        <thead class="bg-light">
-                            <tr>
-                                <th>Product</th>
-                                <th>Price</th>
-                                <th>Quantity</th>
-                                <th>Total</th>
-                                <th>Remove</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <img src="{% static 'user_app/img/product-1.jpg' %}" style="width: 50px;" class="me-3">
-                                        <span>Fresh Tomato</span>
-                                    </div>
-                                </td>
-                                <td>$15.00</td>
-                                <td><input type="number" class="form-control" value="1" style="width: 70px;"></td>
-                                <td>$15.00</td>
-                                <td><button class="btn btn-sm btn-outline-danger">&times;</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <!-- Summary Sidebar -->
-            <div class="col-lg-4">
-                <div class="bg-light p-4 rounded shadow-sm">
-                    <h4 class="mb-4">Cart Summary</h4>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Subtotal:</span> <span>$15.00</span>
+      <h1 class="mb-5">Your Shopping Cart</h1>
+      <div class="row g-5">
+        <div class="col-lg-8">
+          <div class="table-responsive">
+            <table class="table align-middle border">
+              <thead class="bg-light">
+                <tr>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Total</th>
+                  <th>Remove</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <img src="{% static 'user_app/img/product-1.jpg' %}" style="width: 50px;" class="me-3" />
+                      <span>Fresh Tomato</span>
                     </div>
-                    <div class="d-flex justify-content-between mb-4">
-                        <span>Shipping:</span> <span>$5.00</span>
-                    </div>
-                    <hr>
-                    <div class="d-flex justify-content-between mb-4">
-                        <strong class="h5">Total:</strong> <strong class="h5 text-primary">$20.00</strong>
-                    </div>
-                    <button class="btn btn-primary w-100 rounded-pill py-3">Proceed to Checkout</button>
-                </div>
-            </div>
+                  </td>
+                  <td>$15.00</td>
+                  <td>
+                    <input type="number" class="form-control" value="1" style="width: 70px;" />
+                  </td>
+                  <td>$15.00</td>
+                  <td>
+                    <button class="btn btn-sm btn-outline-danger">&times;</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
+        <!-- Summary Sidebar -->
+        <div class="col-lg-4">
+          <div class="bg-light p-4 rounded shadow-sm">
+            <h4 class="mb-4">Cart Summary</h4>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Subtotal:</span> <span>$15.00</span>
+            </div>
+            <div class="d-flex justify-content-between mb-4">
+              <span>Shipping:</span> <span>$5.00</span>
+            </div>
+            <hr />
+            <div class="d-flex justify-content-between mb-4">
+              <strong class="h5">Total:</strong> <strong class="h5 text-primary">$20.00</strong>
+            </div>
+            <button class="btn btn-primary w-100 rounded-pill py-3">Proceed to Checkout</button>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 {% endblock %}

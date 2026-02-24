@@ -1,0 +1,33 @@
+{% block content%}
+<div class="tab-pane fade" id="tab-orders">
+  <h3 class="mb-4">Customer Orders</h3>
+  <div class="table-responsive bg-white p-3 rounded shadow-sm">
+    <table class="table table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Date</th>
+          <th>Total</th>
+          <th>Status</th>
+          <th>Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>#FD-9921</td>
+          <td>Fareed Khan</td>
+          <td>20 Oct, 2025</td>
+          <td>$45.50</td>
+          <td>
+            <span class="badge badge-pending">Pending</span>
+          </td>
+          <td>
+            <button class="btn btn-sm btn-secondary">View</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

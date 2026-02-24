@@ -1,4 +1,4 @@
-
+{% block content %}
     <h3 class="mb-4">Your Orders</h3>
     {% if customer_orders %}
         <div class="table-responsive">
@@ -40,3 +40,4 @@
             You haven't placed any orders yet!
         </div>
     {% endif %}
+{% endblock %}

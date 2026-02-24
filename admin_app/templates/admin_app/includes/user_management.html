@@ -1,0 +1,36 @@
+{% load static %}
+{% block content %}
+  <div class="container-fluid admin-spacing">
+    <div class="tab-pane fade" id="tab-users">
+      <h3 class="mb-4">Registered Customers</h3>
+      <div class="table-responsive bg-white p-3 rounded shadow-sm">
+        <table class="table table-hover">
+          <thead class="table-light">
+            <tr>
+              <th>User ID</th>
+              <th>Full Name</th>
+              <th>Email</th>
+              <th>Joined Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#USR-001</td>
+              <td>John Doe</td>
+              <td>john@example.com</td>
+              <td>12 Jan, 2025</td>
+              <td>
+                <span class="badge bg-success">Active</span>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-danger">Block</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

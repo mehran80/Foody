@@ -2,60 +2,59 @@
 {% load static %}
 
 {% block content %}
-
-<div class="container-fluid page-header mb-5 wow fadeIn" data-wow-delay="0.1s">
+  <div class="container-fluid page-header mb-5 wow fadeIn" data-wow-delay="0.1s">
     <div class="container">
-        <nav aria-label="breadcrumb animated slideInDown">
-            <ol class="breadcrumb mb-0">
-                <li class="breadcrumb-item"><a class="text-body" href="{% url 'home' %}">Home</a></li>
-                <li class="breadcrumb-item text-dark active" aria-current="page">Login</li>
-            </ol>
-        </nav>
+      <nav aria-label="breadcrumb animated slideInDown">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item">
+            <a class="text-body" href="{% url 'home' %}">Home</a>
+          </li>
+          <li class="breadcrumb-item text-dark active" aria-current="page">Login</li>
+        </ol>
+      </nav>
     </div>
-</div>
+  </div>
 
-<div class="container-xxl py-5">
+  <div class="container-xxl py-5">
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-5 col-md-7 wow fadeInUp" data-wow-delay="0.1s">
-                <div class="bg-light rounded p-5">
-                    <div class="section-header text-center mx-auto mb-4" style="max-width: 500px;">
-                        <h1 class="display-5 mb-3">Sign Up</h1>
-                        <p>Create an account to start shopping organic.</p>
-                    </div>
-                    <form action="" method="POST">
-                        {% csrf_token %}
-                        <div class="row g-3">
-                            {% for field in form %}
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        {{ field }}
-                                        <label for="{{ field.id_for_label}}">{{field.label}}</label>
-                                    </div>
-                                    {% if field.errors %}
-                                        {% for error in field.errors %}
-                                            <small class="text-danger">{{error}}</small>
-                                        {% endfor %}
-
-                                        {% if field.help_text%}
-                                            <small class="form-text text-muted d-block" style="font-size: 0.7rem;">
-                                                {{field.help_text}}
-                                            </small>
-                                        {% endif %}
-                                    {% endif %}
-                                </div>
-                            {% endfor %}
-                            <div class="col-12">
-                                <button class="btn btn-primary rounded-pill py-3 px-5 w-100" type="submit">Register Now</button>
-                            </div>
-                            <div class="col-12 text-center mt-3">
-                                <small>Already have an account? <a href="{% url 'login' %}" class="text-secondary">Login here</a></small>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+      <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7 wow fadeInUp" data-wow-delay="0.1s">
+          <div class="bg-light rounded p-5">
+            <div class="section-header text-center mx-auto mb-4" style="max-width: 500px;">
+              <h1 class="display-5 mb-3">Sign Up</h1>
+              <p>Create an account to start shopping organic.</p>
             </div>
+            <form action="" method="POST">
+              {% csrf_token %}
+              <div class="row g-3">
+                {% for field in form %}
+                  <div class="col-12">
+                    <div class="form-floating">
+                      {{ field }}
+                      <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    </div>
+                    {% if field.errors %}
+                      {% for error in field.errors %}
+                        <small class="text-danger">{{ error }}</small>
+                      {% endfor %}
+
+                      {% if field.help_text %}
+                        <small class="form-text text-muted d-block" style="font-size: 0.7rem;">{{ field.help_text }}</small>
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                {% endfor %}
+                <div class="col-12">
+                  <button class="btn btn-primary rounded-pill py-3 px-5 w-100" type="submit">Register Now</button>
+                </div>
+                <div class="col-12 text-center mt-3">
+                  <small>Already have an account? <a href="{% url 'login' %}" class="text-secondary">Login here</a></small>
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
-</div>
+  </div>
 {% endblock %}

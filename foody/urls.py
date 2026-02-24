@@ -24,8 +24,7 @@ urlpatterns = [
     path('admin/', include('admin_app.urls')),
     path('', include('core.urls')),
     path('user/',include('user_app.urls')),
-    path('products/',include('products.urls')),
-    path('pannel/',include('admin_app.urls')),
+    path('products/',include('product_app.urls')),
 ]
 
 if settings.DEBUG:

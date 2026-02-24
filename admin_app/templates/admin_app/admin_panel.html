@@ -1,11 +1,11 @@
 {% extends 'core/base.html' %}
 {% load static %}
+
 {% block content %}
   <div class="container-fluid admin-spacing">
     <div class="row px-4">
       <!-- Sidebar Navigation -->
       <div class="col-lg-2 admin-sidebar p-3 rounded">
-        <!-- Title visible only on large screens to save mobile space -->
         <h4 class="mb-4 text-primary d-none d-lg-block">Admin Panel</h4>
 
         <!-- Toggle Button (Visible only on small screens) -->
@@ -16,6 +16,7 @@
           <div class="nav flex-column nav-pills" id="adminTab" role="tablist">
             <button class="nav-link active text-start" data-bs-toggle="pill" data-bs-target="#tab-overview"><i class="fa fa-chart-line me-2"></i> Overview</button>
             <button class="nav-link text-start" data-bs-toggle="pill" data-bs-target="#tab-products"><i class="fa fa-leaf me-2"></i> Products</button>
+            <button class="nav-link text-start" data-bs-toggle="pill" data-bs-target="#tab-category"><i class="fa fa-tags me-2"></i> Categories</button>
             <button class="nav-link text-start" data-bs-toggle="pill" data-bs-target="#tab-orders"><i class="fa fa-shopping-cart me-2"></i> Orders</button>
             <button class="nav-link text-start" data-bs-toggle="pill" data-bs-target="#tab-users"><i class="fa fa-users me-2"></i> Customers</button>
             <hr />
@@ -27,18 +28,19 @@
       <!-- Main Content Area -->
       <div class="col-lg-10 ps-lg-4 mt-4 mt-lg-0">
         <div class="tab-content">
-          <!-- 1. OVERVIEW SECTION -->
+          <!-- INCLUDES START HERE -->
           {% include 'admin_app/includes/overview.html' %}
-          <!-- 2. PRODUCT MANAGEMENT SECTION -->
           {% include 'admin_app/includes/product_management.html' %}
-          <!-- 3. ORDER MANAGEMENT SECTION -->
+          {% include 'admin_app/includes/category_management.html' %}
           {% include 'admin_app/includes/order_management.html' %}
-          <!-- 4. USER MANAGEMENT SECTION -->
           {% include 'admin_app/includes/user_management.html' %}
         </div>
       </div>
     </div>
   </div>
-  <!-- Modal for Adding Product -->
+
+  <!-- Modals -->
   {% include 'admin_app/includes/add_product.html' %}
+  {% include 'admin_app/includes/add_category.html' %}
 {% endblock %}
+<!-- NO CODE SHOULD GO DOWN HERE! -->

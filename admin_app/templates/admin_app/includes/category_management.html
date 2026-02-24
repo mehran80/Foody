@@ -1,32 +1,22 @@
 {% load static %}
-<div class="tab-pane fade" id="tab-products">
+<div class="tab-pane fade" id="tab-category">
   <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
-    <h3 class="mb-2 mb-md-0">Manage Inventory</h3>
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">+ Add Product</button>
+    <h3 class="mb-2 mb-md-0">Manage Categories</h3>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">+ Add Category</button>
   </div>
   <div class="table-responsive bg-white p-3 rounded shadow-sm">
     <table class="table table-hover align-middle">
       <thead class="table-light">
         <tr>
-          <th>Image</th>
           <th>Name</th>
-          <th>Price</th>
-          <th>Stock</th>
-          <th>Status</th>
+          <th>Total Products</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>
-            <img src="{% static 'user_app/img/product-1.jpg' %}" />
-          </td>
           <td>Fresh Tomato</td>
           <td>$15.00</td>
-          <td>45 kg</td>
-          <td>
-            <span class="badge bg-success">In Stock</span>
-          </td>
           <td>
             <button class="btn btn-sm btn-outline-primary"><i class="fa fa-edit"></i></button>
             <button class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></button>

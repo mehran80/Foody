@@ -1,16 +1,16 @@
 
-  <div class="modal fade" id="addProductModal" tabindex="-1">
+  <div class="modal fade" id="addCategoryModal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Add New Product</h5>
+          <h5 class="modal-title">Add Category</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form method="POST" enctype="multipart/form-data" action="{% url 'product_app:add_product'%}">
+          <form method="POST" enctype="multipart/form-data" action="{% url 'product_app:add_category'%}">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">Save Product</button>
+            {{ category_form.as_p }}
+            <button type="submit" class="btn btn-primary">Save Category</button>
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
           </form>
         </div>

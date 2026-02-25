@@ -27,20 +27,17 @@
                     <form action="" method="POST">
                         {% csrf_token %}
                         <div class="row g-3">
-                            {% for field in form %}
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        {{ field }}
-                                        <label for="{{field.id_label}}">{{field.label}}</label>
-                                    </div>
-                                    <small class='text_danger'>{{ field.error }}</small>
+                           {{ form.as_p }}
+                             <div class="col-12">
+                                <div class="form-check">
+                                    {{ form.remember_me }}
+                                    <label class="form-check-label" for="{{ form.remember_me.id_for_label }}">Remember Me</label>
                                 </div>
-                            {% endfor %}
                             <div class="col-12">
                                 <button class="btn btn-primary rounded-pill py-3 px-5 w-100" type="submit">Login</button>
                             </div>
                             <div class="col-12 text-center mt-3">
-                                <small>Don't have an account? <a href="{% url 'signup' %}" class="text-secondary">Sign up here</a></small>
+                                <small>Don't have an account? <a href="{% url 'user_app:signup' %}" class="text-secondary">Sign up here</a></small>
                             </div>
                         </div>
                     </form>

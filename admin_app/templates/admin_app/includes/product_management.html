@@ -17,21 +17,29 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>
-            <img src="{% static 'user_app/img/product-1.jpg' %}" />
-          </td>
-          <td>Fresh Tomato</td>
-          <td>$15.00</td>
-          <td>45 kg</td>
-          <td>
-            <span class="badge bg-success">In Stock</span>
-          </td>
-          <td>
-            <button class="btn btn-sm btn-outline-primary"><i class="fa fa-edit"></i></button>
-            <button class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></button>
-          </td>
-        </tr>
+        {% for product in products %}
+          <tr>
+            <td>
+              <img src="{% static 'user_app/img/product-'|add:product.id|add:'.jpg' %}" />
+            </td>
+            <td>{{ product.name }}</td>
+            <td>${{ product.price }}</td>
+            <td>{{ product.stock }} kg</td>
+            {% if product.is_available == True %}
+            <td>
+              <span class="badge bg-success">Available</span>
+            </td>
+            {% else %}  
+            <td>
+              <span class="badge bg-danger">Unavailable</span>
+            </td>
+            {% endif %}
+            <td>
+              <button class="btn btn-sm btn-outline-primary"><i class="fa fa-edit"></i></button>
+              <button class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></button>
+            </td>
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>

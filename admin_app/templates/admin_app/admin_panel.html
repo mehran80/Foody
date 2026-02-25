@@ -14,11 +14,11 @@
         <!-- Collapsible Wrapper -->
         <div class="collapse d-lg-block" id="adminSidebarCollapse">
           <div class="nav flex-column nav-pills" id="adminTab" role="tablist">
-            <button class="nav-link active text-start" data-bs-toggle="pill" data-bs-target="#tab-overview"><i class="fa fa-chart-line me-2"></i> Overview</button>
-            <button class="nav-link text-start" data-bs-toggle="pill" data-bs-target="#tab-products"><i class="fa fa-leaf me-2"></i> Products</button>
-            <button class="nav-link text-start" data-bs-toggle="pill" data-bs-target="#tab-category"><i class="fa fa-tags me-2"></i> Categories</button>
-            <button class="nav-link text-start" data-bs-toggle="pill" data-bs-target="#tab-orders"><i class="fa fa-shopping-cart me-2"></i> Orders</button>
-            <button class="nav-link text-start" data-bs-toggle="pill" data-bs-target="#tab-users"><i class="fa fa-users me-2"></i> Customers</button>
+            <button class="nav-link active text-start" id="overview-tab" data-bs-toggle="pill" data-bs-target="#tab-overview"><i class="fa fa-chart-line me-2"></i> Overview</button>
+            <button class="nav-link text-start" id="products-tab" data-bs-toggle="pill" data-bs-target="#tab-products"><i class="fa fa-leaf me-2"></i> Products</button>
+            <button class="nav-link text-start" id="category-tab" data-bs-toggle="pill" data-bs-target="#tab-category"><i class="fa fa-tags me-2"></i> Categories</button>
+            <button class="nav-link text-start" id="orders-tab" data-bs-toggle="pill" data-bs-target="#tab-orders"><i class="fa fa-shopping-cart me-2"></i> Orders</button>
+            <button class="nav-link text-start" id="users-tab" data-bs-toggle="pill" data-bs-target="#tab-users"><i class="fa fa-users me-2"></i> Customers</button>
             <hr />
             <a href="{% url 'home' %}" class="nav-link text-start text-secondary"><i class="fa fa-eye me-2"></i> View Site</a>
           </div>
@@ -44,3 +44,18 @@
   {% include 'admin_app/includes/add_category.html' %}
 {% endblock %}
 <!-- NO CODE SHOULD GO DOWN HERE! -->
+ {% block extra_js %}
+<script>
+  // Initialize active tab from URL hash
+  document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const tab = urlParams.get('tab');
+    if (tab) {
+      const tabButton = document.querySelector(`[data-bs-target="#tab-${tab}"]`);
+      if (tabButton) {
+        tabButton.show();
+      }
+    }
+  });
+</script>
+ {% endblock %}

@@ -9,17 +9,17 @@ from user_app.models import User
 def admin_pannel(request):
     products = Product.objects.all().order_by('-id')
     users = User.objects.all()
-    category = Category.objects.all()
+    categories = Category.objects.all()
     total_products = products.count()
     category_form = CategoryForm()
     form = ProductForm()
-    return render(request, 'admin_app/admin_panel.html',{
+    context = {
         'products': products,
         'total_products': total_products,
-        'category': category,
+        'categories': categories,
         'form': form,
         'category_form': category_form,
         'users': users,
-
-    })
+    }
+    return render(request, 'admin_app/admin_panel.html', context)
 

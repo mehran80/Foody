@@ -1,34 +1,50 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from .decorators import admin_required
 from django.contrib.auth.decorators import login_required
-from .forms import ProductForm
+from .forms import ProductForm, CategoryForm
 from .models import Product
 
-
-
-# Create your views here.
 def products_view(request):
-    return render(request, 'product_app/view_products.html')
+        products = Product.objects.all()
+        return render(request, 'product_app/products.html', {
+            'products': products,
+            'title': 'Products',
+        })
+def product_detail(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    return render(request, 'product_app/product_detail.html', {
+        'product': product,
+        'title': product.name,
+    })  
 
-def product_detail(request):
-    return render(request,'product_app/product_detail.html')
 
-@admin_required
+
 def add_category(request):
+    
+    
     if request.method == 'POST':
-       form = ProductForm(request.POST, request.FILES)
-       if form.is_valid():
-           form.save()
-           return redirect('admin_panel')
+        form = CategoryForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Category added successfully!')
+        else:
+            messages.error(request, 'Failed to add category. Please check your inputs.')  
+
+        
+        url = reverse('admin_app:admin_dashboard') + '?tab=category'
+        return redirect(url)  
        
-    else:
-        form = ProductForm()
-
-
+    
+    
+    form = CategoryForm()
     return render(request, 'admin_app/add_category.html', {
         'form': form,
         'title': 'Add Category',
     })
+       
 
 @admin_required
 def add_product(request):
@@ -36,7 +52,8 @@ def add_product(request):
        form = ProductForm(request.POST, request.FILES)
        if form.is_valid():
            form.save()
-           return redirect('admin_panel')
+           url = reverse('admin_app:admin_dashboard') + '?tab=tab-products'
+           return redirect(url)
        
     else:
         form = ProductForm()

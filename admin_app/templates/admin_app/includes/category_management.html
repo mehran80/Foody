@@ -14,14 +14,16 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td>Fresh Tomato</td>
-          <td>$15.00</td>
-          <td>
-            <button class="btn btn-sm btn-outline-primary"><i class="fa fa-edit"></i></button>
-            <button class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></button>
-          </td>
-        </tr>
+        {% for category in categories %}
+          <tr>
+            <td>{{ category.name }}</td>
+            <td>{{ category.products.count }}</td>
+            <td>
+              <button class="btn btn-sm btn-outline-primary"><i class="fa fa-edit"></i></button>
+              <button class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></button>
+            </td>
+          </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>

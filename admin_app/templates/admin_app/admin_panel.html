@@ -41,21 +41,9 @@
 
   <!-- Modals -->
   {% include 'admin_app/includes/add_product.html' %}
+  {% include 'admin_app/includes/edit_product.html' %}
   {% include 'admin_app/includes/add_category.html' %}
+  {% include 'admin_app/includes/edit_category.html' %}
 {% endblock %}
 <!-- NO CODE SHOULD GO DOWN HERE! -->
- {% block extra_js %}
-<script>
-  // Initialize active tab from URL hash
-  document.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const tab = urlParams.get('tab');
-    if (tab) {
-      const tabButton = document.querySelector(`[data-bs-target="#tab-${tab}"]`);
-      if (tabButton) {
-        tabButton.show();
-      }
-    }
-  });
-</script>
- {% endblock %}
+ 

@@ -1,0 +1,23 @@
+<!-- EDIT CATEGORY MODAL -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Category</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editCategoryForm">
+          <!-- Hidden input to store the ID of the category being edited -->
+          <input type="hidden" id="editCategoryId" />
+          <div class="mb-3">
+            <label class="form-label">Category Name</label>
+            <input type="text" class="form-control" id="editCategoryName" required />
+          </div>
+          <button type="submit" class="btn btn-primary">Update Category</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

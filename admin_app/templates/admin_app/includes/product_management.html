@@ -18,9 +18,13 @@
       </thead>
       <tbody>
         {% for product in products %}
-          <tr>
-            <td>
-              <img src="{% static 'user_app/img/product-'|add:product.id|add:'.jpg' %}" />
+          <tr id="product-row-{{product.id}}">
+            <td id="product-image-{{product.id}}" class="product-image">
+              {% if product.images %}
+              <img src="{{ product.images.url }}" alt="{{ product.name }}" class="img-fluid" width="100" height="100"/>
+              {% else %}
+              <img src="{% static 'core/img/placeholder.png' %}" alt="No Image" class="img-fluid" style="width: 50px; height: 50px; object-fit: cover; opacity: 0.5;"/>
+              {% endif %}
             </td>
             <td>{{ product.name }}</td>
             <td>${{ product.price }}</td>
@@ -35,8 +39,24 @@
             </td>
             {% endif %}
             <td>
-              <button class="btn btn-sm btn-outline-primary"><i class="fa fa-edit"></i></button>
-              <button class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></button>
+              <button class="btn btn-sm btn-outline-primary update-product-btn"
+                      data-product-id="{{ product.id }}"
+                      data-product-name="{{ product.name }}"
+                      data-product-description="{{ product.description }}"
+                      data-product-price="{{ product.price }}"
+                      data-product-images="{{product.images}}"
+                      data-product-category="{{ product.category.id }}"
+                      data-product-stock="{{ product.stock }}"
+                      data-product-availability="{{ product.is_available }}"
+                      
+                      data-edit-url="{% url 'product_app:edit_product' product.id %}">
+                      <i class="fa fa-edit"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger delete-product-btn"
+               data-product-id="{{ product.id }}"
+               data-delete-url="{% url 'product_app:delete_product' product.id %}">
+                <i class="fa fa-trash"></i>
+              </button>
             </td>
           </tr>
         {% endfor %}

@@ -15,12 +15,21 @@
       </thead>
       <tbody>
         {% for category in categories %}
-          <tr>
-            <td>{{ category.name }}</td>
+          <tr id="category-row-{{category.id}}">
+            <td id="category-name-{{category.id}}" class="category-name">{{ category.name }}</td>
             <td>{{ category.products.count }}</td>
             <td>
-              <button class="btn btn-sm btn-outline-primary"><i class="fa fa-edit"></i></button>
-              <button class="btn btn-sm btn-outline-danger"><i class="fa fa-trash"></i></button>
+              <button class="btn btn-sm btn-outline-primary update-category-btn"
+                      data-category-id="{{category.id}}"
+                      data-category-name="{{category.name}}"
+                      data-edit-url="{% url 'product_app:edit_category' category.id %}">
+                      <i class="fa fa-edit"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger delete-category-btn"
+                      data-category-id="{{category.id}}"
+                      data-delete-url="{% url 'product_app:delete_category' category.id %}">
+                      <i class="fa fa-trash"></i>
+              </button>
             </td>
           </tr>
         {% endfor %}

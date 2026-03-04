@@ -1,53 +1,66 @@
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Product</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editProductForm">
+          <input type="hidden" id="editProductId" />
 
-  <div class="modal fade" id="editProductModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Add New Product</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="editProductForm">
-            <input type="hidden" id="editProductId" />
-            <div class="mb-3">
-              <label for="editProductName" class="form-label">Product Name</label>
-              <input type="text" class="form-control" id="editProductName" required>
+          <div class="mb-3">
+            <label for="editProductName" class="form-label">Product Name</label>
+            <input type="text" class="form-control" id="editProductName" name="name" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="editProductDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="editProductDescription" name="description" rows="3" required></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="editProductPrice" class="form-label">Price</label>
+            <input type="number" class="form-control" id="editProductPrice" name="price" step="0.01" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="editProductStock" class="form-label">Stock (kg)</label>
+            <input type="number" class="form-control" id="editProductStock" name="stock" step="0.01" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="editProductCategory" class="form-label">Category</label>
+            <!-- ADDED: name="category" -->
+            <select class="form-select" id="editProductCategory" name="category" required>
+              {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Product Image</label>
+            <div class="mb-2">
+              <label>Current Image:</label><br />
+              <img id="editProductImagePreview" src="" alt="Current Image" style="max-width: 100px; max-height: 100px; border: 1px solid #ddd; padding: 2px;" />
             </div>
-            <div class="mb-3">
-              <label for="editProductDescription" class="form-label">Description</label>
-              <textarea class="form-control" id="editProductDescription" rows="3" required></textarea>
-            </div>
-            <div class="mb-3">
-              <label for="editProductPrice" class="form-label">Price</label>
-              <input type="number" class="form-control" id="editProductPrice" step="0.01" required>
-            </div>
-            <div class="mb-3">
-              <label for="editProductStock" class="form-label">Stock (kg)</label>
-              <input type="number" class="form-control" id="editProductStock" step="0.01" required>
-            </div>
-            <div class="mb-3">
-              <label for="editProductCategory" class="form-label">Category</label>
-              <select class="form-select" id="editProductCategory" required>
-                {% for category in categories %}
-                  <option value="{{ category.id }}">{{ category.name }}</option>
-                {% endfor %}
-              </select>
-            </div>
-            <div class="mb-3">
-              <label for="editProductImages" class="form-label">Images</label>
-              <input type="text" class="form-control" id="editProductImages" required>
-            </div>
-            <div class="mb-3">
-              <label for="editProductAvailability" class="form-label">Availability</label>
-                <select class="form-select" id="editProductAvailability" required>
-                    <option value="true">Available</option>
-                    <option value="false">Unavailable</option>  
-            </div>
-            <button type="submit" class="btn btn-primary">Save Product</button>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          </form>
-        </div>
+            <label>Upload New (Leave empty to keep current):</label>
+            <input type="file" class="form-control" id="editProductImages" name="image" />
+          </div>
+
+          <div class="mb-3">
+            <label for="editProductAvailability" class="form-label">Availability</label>
+            <select class="form-select" id="editProductAvailability" name="is_available" required>
+              <option value="True">Available</option>
+              <option value="False">Unavailable</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Save Product</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </form>
       </div>
     </div>
   </div>
-
+</div>

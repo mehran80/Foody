@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'product_app',
     'admin_app',
     'phonenumber_field',
+    'cart_app',
+    'order_app',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'cart_app.context_processors.cart_context_processor',
             ],
         },
     },

@@ -71,6 +71,8 @@
         <script>
         const CSRF_TOKEN = '{{ csrf_token }}';
         </script>
+        <script src="{% static 'core/js/products.js' %}"></script>
+        <script src="{% static 'core/js/cart_app.js' %}"></script>
         <script src="{% static 'core/js/admin_panel.js' %}"></script>
     {% endblock %}
 </body>

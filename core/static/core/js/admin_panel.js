@@ -32,83 +32,139 @@ const csrftoken = getCookie('csrftoken');
 // Listen for clicks on edit buttons, populate the modal with the product's current data, and show the modal
 
 document.addEventListener('DOMContentLoaded', function() {
-    const buttonEdit = document.querySelector('.update-product-btn');
-    if (!buttonEdit)
-        return;
+    document.body.addEventListener('click', function(event) {
+        const buttonEdit = event.target.closest('.update-product-btn');
+    
+        if (!buttonEdit) return;
+
         const productId = buttonEdit.dataset.productId;
         const productName = buttonEdit.dataset.productName;
         const productPrice = buttonEdit.dataset.productPrice;
         const productStock = buttonEdit.dataset.productStock;
-        const productAvailability = buttonEdit.dataset.productAvailability;
+        const productAvailability = buttonEdit.dataset.productAvailability; // "True" or "False"
         const productImages = buttonEdit.dataset.productImages;
         const productDescription = buttonEdit.dataset.productDescription;
+        const editUrl = buttonEdit.dataset.editUrl;
 
         // Update the edit modal with product details
         document.getElementById('editProductId').value = productId;
         document.getElementById('editProductName').value = productName;
         document.getElementById('editProductDescription').value = productDescription;
         document.getElementById('editProductPrice').value = productPrice;
-        document.getElementById('editProductImages').value = productImages;
         document.getElementById('editProductCategory').value = buttonEdit.dataset.productCategory;
         document.getElementById('editProductStock').value = productStock;
-        document.getElementById('editProductAvailability').checked = productAvailability === 'True';
         
+        // FIX: Directly assign the string "True" or "False"
+        document.getElementById('editProductAvailability').value = productAvailability;
+
+        // Image Preview Logic
+        const imgPreview = document.getElementById('editProductImagePreview');
+        const fileInput = document.getElementById('editProductImages');
+        fileInput.value = ''; // Clear file input
         
-
-
-        // Show the edit modal
-        const editModal = new bootstrap.Modal(document.getElementById('editProductModal'));
-        editModal.show();
-});
-
-document.getElementById('editProductForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const form = event.target;
-    const productId = document.getElementById('editProductId').value;
-    const productName = document.getElementById('editProductName').value;
-    const productDescription = document.getElementById('editProductDescription').value;
-    const productPrice = document.getElementById('editProductPrice').value;
-    const productImages = document.getElementById('editProductImages').value;
-    const productCategory = document.getElementById('editProductCategory').value;
-    const productStock = document.getElementById('editProductStock').value;
-    const productAvailability = document.getElementById('editProductAvailability').checked;
-    const editUrl = form.dataset.editUrl;
-
-    fetch(editUrl, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': csrftoken,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            name: productName,
-            description: productDescription,
-            images: productImages,
-            price: productPrice,
-            category: productCategory,
-            stock: productStock,
-            is_available: productAvailability })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            const rowToUpdate = document.getElementById(`product-row-${productId}`);
-            if (rowToUpdate) {
-                const cells = rowToUpdate.querySelectorAll('td');
-                cells[1].textContent = productName;
-                cells[2].textContent = `$${productPrice}`;
-                cells[3].textContent = `${productStock} kg`;
-                cells[4].innerHTML = productAvailability ? '<span class="badge bg-success">Available</span>' : '<span class="badge bg-danger">Unavailable</span>';
+        if (productImages && productImages !== "undefined" && productImages !== "") {
+            if (!productImages.startsWith('/media/')) {
+                imgPreview.src = '/media/' + productImages;
+            } else {
+                imgPreview.src = productImages;
             }
-            alert('Product updated successfully.');
+            imgPreview.style.display = 'block';
         } else {
-            alert('Error updating product: ' + data.message);
+            imgPreview.style.display = 'none';
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert("A critical error occurred. Check the console (F12) for details.");
+        
+        // Save URL to the FORM
+        document.getElementById('editProductForm').dataset.editUrl = editUrl;
+
+        // FIX: USE 'editProductModal' (THE DIV), NOT 'editProductForm'
+        const modalElement = document.getElementById('editProductModal');
+        let editModal = bootstrap.Modal.getInstance(modalElement);
+        if (!editModal) {
+            editModal = new bootstrap.Modal(modalElement);
+        }
+        editModal.show();
     });
+
+    const editProductForm = document.getElementById('editProductForm');
+    if(editProductForm) {
+        editProductForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const formData = new FormData(form); 
+            const editUrl = form.dataset.editUrl;
+            const productId = document.getElementById('editProductId').value;
+
+            fetch(editUrl, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    // NO Content-Type here!
+                },
+                body: formData 
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    
+                    // Update the UI
+                    const rowToUpdate = document.getElementById(`product-row-${productId}`);
+                    if (rowToUpdate) {
+                        const nameCell = rowToUpdate.querySelector('.product-name');
+                        const priceCell = rowToUpdate.querySelector('.product-price');
+                        const stockCell = rowToUpdate.querySelector('.product-stock');
+                        const availabilityCell = rowToUpdate.querySelector('.product-availability');
+                        
+                        if(nameCell) nameCell.textContent = formData.get('name');
+                        if(priceCell) priceCell.textContent = `$${formData.get('price')}`;
+                        if(stockCell) stockCell.textContent = `${formData.get('stock')} kg`;
+                        
+                        if(availabilityCell) {
+                            const isAvail = formData.get('is_available') === 'True';
+                            availabilityCell.innerHTML = isAvail 
+                                ? '<span class="badge bg-success">Available</span>' 
+                                : '<span class="badge bg-danger">Unavailable</span>';
+                        }
+
+                        if (data.new_image_url) {
+                            const img = rowToUpdate.querySelector('img');
+                            if (img) img.src = data.new_image_url;
+                        }
+                        
+                        // CRITICAL: Update the hidden data attributes on the button so if you click edit again, it has the new data!
+                        const btn = rowToUpdate.querySelector('.update-product-btn');
+                        if(btn) {
+                            btn.dataset.productName = formData.get('name');
+                            btn.dataset.productPrice = formData.get('price');
+                            btn.dataset.productStock = formData.get('stock');
+                            btn.dataset.productDescription = formData.get('description');
+                            btn.dataset.productAvailability = formData.get('is_available');
+                            btn.dataset.productCategory = formData.get('category');
+                            if (data.new_image_url) btn.dataset.productImages = data.new_image_url;
+                        }
+                    }
+                    
+                    // FIX: USE 'editProductModal' (THE DIV), NOT 'editProductForm'
+                    const modalElement = document.getElementById('editProductModal');
+                    const editModal = bootstrap.Modal.getInstance(modalElement);
+                    if (editModal) {
+                        editModal.hide();
+                    }
+                    
+                    alert('Product updated successfully.');
+                    
+                } else {
+                    console.log(data.errors);
+                    alert('Error updating product. Please check the form.');
+                }
+            })
+            .catch(error => {
+                console.error('Fetch Error:', error);
+                alert("A critical error occurred.");
+            });
+        });
+    }
+    
 });
 
 // Handle product deletion
@@ -256,48 +312,50 @@ document.body.addEventListener('click', function(event) {
 // When the form is submitted, prevent default behavior, send an AJAX request to update the category, and update the UI based on the response
 // Listen for form submission in the edit category modal
 // When the form is submitted, prevent default behavior, send an AJAX request to update the category, and update the UI based on the response
-
-document.getElementById('editCategoryForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    const form = event.target;
-    const categoryId = document.getElementById('editCategoryId').value;
-    const newName = document.getElementById('editCategoryName').value;
-    const editUrl = form.dataset.editUrl;
-    fetch(editUrl, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': csrftoken,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name: newName })
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            const rowToUpdate = document.getElementById(`category-row-${categoryId}`);
-            if (rowToUpdate) {
-                const nameCell = rowToUpdate.querySelector('.category-name');
-                console.log("Found Row:", rowToUpdate); // Debugging
-                if (nameCell) {
-                    nameCell.textContent = newName;
+const editCategoryForm = document.getElementById('editCategoryForm');
+if (editCategoryForm) {
+    editCategoryForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+        const form = event.target;
+        const categoryId = document.getElementById('editCategoryId').value;
+        const newName = document.getElementById('editCategoryName').value;
+        const editUrl = form.dataset.editUrl;
+        fetch(editUrl, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name: newName })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const rowToUpdate = document.getElementById(`category-row-${categoryId}`);
+                if (rowToUpdate) {
+                    const nameCell = rowToUpdate.querySelector('.category-name');
+                    console.log("Found Row:", rowToUpdate); // Debugging
+                    if (nameCell) {
+                        nameCell.textContent = newName;
+                    }
+                    const editBtn = rowToUpdate.querySelector('.update-category-btn');
+                    if (editBtn) {
+                        editBtn.dataset.categoryName = newName;
+                    }
                 }
-                const editBtn = rowToUpdate.querySelector('.update-category-btn');
-                if (editBtn) {
-                    editBtn.dataset.categoryName = newName;
-                }
-            }
 
-            if (document.activeElement) {
-                document.activeElement.blur();
+                if (document.activeElement) {
+                    document.activeElement.blur();
+                }
+                const editModal = bootstrap.Modal.getInstance(document.getElementById('editCategoryModal'));
+                editModal.hide();
+            } else {
+                alert('Error updating category: ' + data.message);
             }
-            const editModal = bootstrap.Modal.getInstance(document.getElementById('editCategoryModal'));
-            editModal.hide();
-        } else {
-            alert('Error updating category: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert("A critical error occurred. Check the console (F12) for details.");
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("A critical error occurred. Check the console (F12) for details.");
+        });
     });
-});
+}

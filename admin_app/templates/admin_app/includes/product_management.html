@@ -44,7 +44,7 @@
                       data-product-name="{{ product.name }}"
                       data-product-description="{{ product.description }}"
                       data-product-price="{{ product.price }}"
-                      data-product-images="{{product.images}}"
+                      data-product-images="{% if product.images %}{{ product.images.url }}{% endif %}"
                       data-product-category="{{ product.category.id }}"
                       data-product-stock="{{ product.stock }}"
                       data-product-availability="{{ product.is_available }}"

@@ -1,3 +1,5 @@
+from typing import Iterable
+
 from django.db import models
 
 class Category(models.Model):
@@ -12,8 +14,24 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     images = models.ImageField(upload_to='product_images/')
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    stock = models.PositiveIntegerField()
+    stock = models.PositiveIntegerField(default=0)
     is_available = models.BooleanField(default=True)
+    discount_percentage = models.PositiveIntegerField(default=0)
+
+    def save(self, *args, **kwargs):
+        if self.stock > 0:
+            self.is_available = True
+        else:
+            self.is_available = False
+            
+        super().save(*args, **kwargs)
+
+    @property
+    def get_discounted_price(self):
+        if self.discount_percentage > 0:
+            discount_amount = (self.price * self.discount_percentage) / 100
+            return self.price - discount_amount
+        return self.price
 
     def __str__(self):
         return self.name

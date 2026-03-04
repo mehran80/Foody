@@ -1,0 +1,112 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+  <!-- Page Header Start -->
+  <div class="container-fluid page-header mb-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container">
+      <h1 class="display-3 mb-3 animated slideInDown">Checkout</h1>
+      <p class="text-dark">Complete your organic food order.</p>
+    </div>
+  </div>
+  <!-- Page Header End -->
+
+  <!-- Checkout Section Start -->
+  <div class="container-xxl py-5">
+    <div class="container">
+      <!-- Notice the form wraps BOTH the details and the summary -->
+      <form action="" method="POST">
+        {% csrf_token %}
+
+        <div class="row g-5">
+          <!-- LEFT SIDE: Billing / Shipping Details -->
+          <div class="col-lg-7 col-xl-8 wow fadeInLeft" data-wow-delay="0.1s">
+            <h3 class="mb-4">Billing Details</h3>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label">First Name *</label>
+                <!-- name="first_name" matches your Order model -->
+                <input type="text" name="first_name" class="form-control" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Last Name *</label>
+                <input type="text" name="last_name" class="form-control" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Email Address *</label>
+                <input type="email" name="email" class="form-control" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Phone Number *</label>
+                <input type="tel" name="phone" class="form-control" required />
+              </div>
+              <div class="col-12">
+                <label class="form-label">Street Address *</label>
+                <input type="text" name="address" class="form-control" placeholder="123 Organic Street" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Town / City *</label>
+                <input type="text" name="city" class="form-control" required />
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Postal Code *</label>
+                <input type="text" name="postal_code" class="form-control" required />
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT SIDE: Order Summary & Payment -->
+          <div class="col-lg-5 col-xl-4 wow fadeInRight" data-wow-delay="0.1s">
+            <div class="bg-light rounded p-4">
+              <h3 class="mb-4">Order Summary</h3>
+
+              <!-- Cart Items Loop -->
+              <div class="border-bottom pb-3 mb-3">
+                <div class="d-flex justify-content-between mb-3 fw-bold">
+                  <span>Product</span>
+                  <span>Total</span>
+                </div>
+
+                {% for item in cart %}
+                  <div class="d-flex justify-content-between mb-2">
+                    <span>{{ item.product.name }} <span class="text-muted">x {{ item.quantity }}</span></span>
+                    <span>${{ item.total_price }}</span>
+                  </div>
+                {% endfor %}
+              </div>
+
+              <!-- Subtotal & Shipping -->
+              <div class="border-bottom pb-3 mb-3">
+                <div class="d-flex justify-content-between mb-2">
+                  <span>Subtotal</span>
+                  <span>${{ cart.get_total_price }}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                  <span>Shipping</span>
+                  <span class="text-success">Free Shipping</span>
+                </div>
+              </div>
+
+              <!-- Grand Total -->
+              <div class="d-flex justify-content-between mb-4">
+                <h4 class="mb-0">Grand Total</h4>
+                <h4 class="mb-0 text-primary">${{ cart.get_total_price }}</h4>
+              </div>
+
+              <!-- Payment Information (Placeholder for Stripe later) -->
+              <div class="mb-4">
+                <p class="text-muted small">
+                  <i class="fa fa-lock me-2 text-primary"></i>Your personal data will be used to process your order and support your experience throughout this website.
+                </p>
+              </div>
+
+              <!-- Submit Button -->
+              <button type="submit" class="btn btn-primary w-100 py-3">Place Order</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Checkout Section End -->
+{% endblock %}

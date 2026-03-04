@@ -1,0 +1,124 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+  <!-- Page Header -->
+  <div class="container-fluid page-header mb-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container">
+      <h1 class="display-3 mb-3 animated slideInDown">Shopping Cart</h1>
+      <p class="text-dark">Review your organic picks before checkout.</p>
+    </div>
+  </div>
+
+  <div class="container-xxl py-5">
+    <div class="container">
+      <!-- CHECK: Is the cart empty? -->
+      {% if cart|length > 0 %}
+        <div class="row g-5">
+          <!-- LEFT SIDE: Cart Items Table -->
+          <div class="col-lg-8">
+            <div class="table-responsive">
+              <table class="table table-borderless align-middle">
+                <thead class="bg-light">
+                  <tr>
+                    <th scope="col">Product</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Remove</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in cart %}
+                    <!-- Note: 'item' comes from your cart iteration -->
+                    <tr class="border-bottom">
+                      <!-- Product Image & Name -->
+                      <td>
+                        <div class="d-flex align-items-center">
+                          {% if item.product.images %}
+                            <img src="{{ item.product.images.url }}" alt="{{ item.product.name }}" class="img-fluid rounded me-3" style="width: 80px;" />
+                          {% else %}
+                            <img src="{% static 'core/img/default-food.jpg' %}" class="img-fluid rounded me-3" style="width: 80px;" />
+                          {% endif %}
+                          <span><a href="{% url 'product_app:product_detail' item.product.id %}" class="text-dark fw-bold text-decoration-none">{{ item.product.name }}</a></span>
+                        </div>
+                      </td>
+
+                      <!-- Unit Price -->
+                      <td>${{ item.price }}</td>
+
+                      <!-- Quantity Update -->
+                      <td>
+                        <div class="d-flex align-items-center">
+                          <!-- MINUS Button -->
+                          <button class="btn btn-sm btn-outline-primary update-cart-btn" data-id="{{ item.product.id }}" data-action="decrement" data-url="{% url 'cart:cart_update_ajax' %}"><i class="fa fa-minus"></i></button>
+
+                          <!-- Quantity Input (Readonly) -->
+                          <!-- Notice we gave it an ID so JavaScript can change the number -->
+                          <input type="text" id="qty-{{ item.product.id }}" class="form-control form-control-sm text-center mx-2" style="width: 50px;" value="{{ item.quantity }}" readonly />
+
+                          <!-- PLUS Button -->
+                          <button class="btn btn-sm btn-outline-primary update-cart-btn" data-id="{{ item.product.id }}" data-action="increment" data-url="{% url 'cart:cart_update_ajax' %}"><i class="fa fa-plus"></i></button>
+                        </div>
+                      </td>
+
+                      <!-- Subtotal for this item -->
+                      <td class="fw-bold" id="item-total-{{item.product.id}}">${{ item.total_price }}</td>
+
+                      <!-- Remove Button -->
+                      <td>
+                        <a href="{% url 'cart:remove_from_cart' item.product.id %}" class="btn btn-sm btn-danger"><i class="fa fa-times"></i></a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- RIGHT SIDE: Cart Summary -->
+          <div class="col-lg-4">
+            <div class="bg-light rounded p-4 wow slideInRight" data-wow-delay="0.1s">
+              <h4 class="mb-4">Cart Summary</h4>
+
+              <!-- Subtotal -->
+              <div class="d-flex justify-content-between mb-3">
+                <span>Subtotal</span>
+                <span id="cart-subtotal">${{ cart.get_total_price }}</span>
+              </div>
+
+              <!-- Shipping (Example) -->
+              <div class="d-flex justify-content-between mb-3">
+                <span>Shipping</span>
+                <span class="text-success">Free</span>
+              </div>
+
+              <hr />
+
+              <!-- Total -->
+              <div class="d-flex justify-content-between mb-4">
+                <h5 class="mb-0">Total</h5>
+                <h5 class="mb-0 text-primary">${{ cart.get_total_price }}</h5>
+              </div>
+
+              <!-- Checkout Buttons -->
+              <a href="{% url 'cart:checkout' %}" class="btn btn-primary w-100 py-3 mb-3">Proceed to Checkout</a>
+              <a href="{% url 'product_app:products' %}" class="btn btn-outline-secondary w-100 py-3">Continue Shopping</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- EMPTY STATE: If cart is empty -->
+      {% else %}
+        <div class="text-center py-5">
+          <div class="mb-4">
+            <i class="fa fa-shopping-basket fa-5x text-muted"></i>
+          </div>
+          <h3 class="mb-3">Your cart is currently empty</h3>
+          <p class="text-muted mb-4">Looks like you haven't made your choice yet.</p>
+          <a href="{% url 'product_app:products' %}" class="btn btn-primary btn-lg rounded-pill py-3 px-5">Start Shopping</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

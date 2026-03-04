@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -16,3 +17,23 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+    
+
+class ShippingAddress(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='addresses')
+    address_label = models.CharField(max_length=50, default='Home')
+
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    phone_number =  PhoneNumberField(blank=True, null=True,)
+    address = models.TextField(blank=True, null=True)
+    city = models.CharField(max_length=100)
+    postal = models.CharField(max_length=20)
+
+    is_default = models.BooleanField(default=False)
+
+    def __str__(self):
+        return F"{self.address_label} - {self.address}"
+
+
+

@@ -13,7 +13,7 @@ from django.views.decorators.http import require_http_methods
 
 def products_view(request):
         products = Product.objects.all()
-        return render(request, 'product_app/products.html', {
+        return render(request, 'product_app/view_products.html', {
             'products': products,
             'title': 'Products',
         })

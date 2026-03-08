@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block content %}
+  <!-- Page Header Start -->
+  <div class="container-fluid page-header mb-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container">
+      <h1 class="display-3 mb-3 animated slideInDown">Payment Failed</h1>
+      <p class="text-dark">Something went wrong with your transaction.</p>
+    </div>
+  </div>
+  <!-- Page Header End -->
+
+  <!-- Failed Section Start -->
+  <div class="container-xxl py-5">
+    <div class="container text-center wow fadeIn" data-wow-delay="0.1s">
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <!-- Big Red Cross Icon -->
+          <i class="fa fa-times-circle display-1 text-danger mb-4" style="font-size: 100px;"></i>
+          
+          <h1 class="display-4 mb-3">Oops! Payment Failed</h1>
+          <p class="fs-5 text-muted mb-4">We could not process your payment. Don't worry, your order has been saved and <strong>no money was deducted</strong> from your account.</p>
+          
+          <!-- Suggestion Box -->
+          <div class="bg-light rounded p-4 mb-5 border border-danger">
+            <h5 class="mb-2 text-dark">What happened?</h5>
+            <ul class="text-muted text-start mb-0" style="display: inline-block;">
+              <li>Your card might have insufficient funds.</li>
+              <li>The card details entered might be incorrect.</li>
+              <li>Your bank might have blocked the transaction.</li>
+            </ul>
+          </div>
+          
+          <!-- Call to Action Buttons -->
+          <!-- Replace '#' with your checkout/payment retry URL -->
+          <a href="#" class="btn btn-primary py-3 px-5 me-3 mb-2">Try Payment Again</a>
+          <a href="/" class="btn btn-outline-secondary py-3 px-5 mb-2">Back to Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Failed Section End -->
+{% endblock %}

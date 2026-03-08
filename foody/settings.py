@@ -133,3 +133,6 @@ AUTH_USER_MODEL = 'user_app.User'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+STRIPE_PUBLIC_KEY = 'pk_test_51T7hscKqozwVdadCOTLel7DGqbrIyuEbFq7qlspyT0RNUQDSJKBjA30xT04boi8i3tWX5FLUxzNw97lgbXdao42B00X8EevnSV'
+STRIPE_SECRET_KEY = 'sk_test_51T7hscKqozwVdadCFVra31u6dvF46w0triVaJywgsyIX58w62GWxyoUpeV7vdXjHnZVeMUZEXWWOfBSnceuUpMTU00P1vOM8nn'

@@ -1,3 +1,4 @@
+<script src="https://js.stripe.com/v3/"></script>
 {% extends 'core/base.html' %}
 {% load static %}
 
@@ -14,59 +15,133 @@
   <!-- Checkout Section Start -->
   <div class="container-xxl py-5">
     <div class="container">
-      <!-- Notice the form wraps BOTH the details and the summary -->
-      <form action="" method="POST">
+      <h5>{{ message }}</h5>
+      
+      <form method="POST" id="checkout-form">
         {% csrf_token %}
-
+        
+        <!-- MAIN GRID ROW -->
+        <!-- 'g-5' creates a nice wide gap between the left side and the right side -->
         <div class="row g-5">
-          <!-- LEFT SIDE: Billing / Shipping Details -->
+            
+          <!-- ==========================================
+               LEFT COLUMN: ADDRESSES & PAYMENT
+               ========================================== -->
           <div class="col-lg-7 col-xl-8 wow fadeInLeft" data-wow-delay="0.1s">
-            <h3 class="mb-4">Billing Details</h3>
-            <div class="row g-3">
-              <div class="col-md-6">
-                <label class="form-label">First Name *</label>
-                <!-- name="first_name" matches your Order model -->
-                <input type="text" name="first_name" class="form-control" required />
+            
+            <!-- 1. SAVED ADDRESSES SECTION -->
+            {% if saved_addresses %}
+              <!-- 'mb-5' creates the gap between this section and the form below -->
+              <div class="bg-light p-4 rounded mb-5">
+                <h3 class="mb-4">Select Shipping Address</h3>
+                <div class="list-group">
+                  {% for address in saved_addresses %}
+                    <label class="list-group-item bg-white d-flex align-items-center py-3">
+                      <input class="form-check-input me-3 saved-address-radio" type="radio" name="selected_address_id" value="{{ address.id }}" {% if address.is_default %}checked{% endif %}/>
+                      <div>
+                        <strong>{{ address.address_label }}</strong><br>
+                        <span class="text-muted small">{{ address.first_name }} {{ address.last_name }}, {{ address.address }}, {{ address.city }}</span>
+                      </div>
+                    </label>
+                  {% endfor %}
+                  
+                  <label class="list-group-item bg-white text-primary fw-bold d-flex align-items-center py-3">
+                    <input class="form-check-input me-3" type="radio" name="selected_address_id" value="new" id="use-new-address-radio" />
+                    + Enter a new shipping address
+                  </label>
+                </div>
               </div>
-              <div class="col-md-6">
-                <label class="form-label">Last Name *</label>
-                <input type="text" name="last_name" class="form-control" required />
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">Email Address *</label>
-                <input type="email" name="email" class="form-control" required />
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">Phone Number *</label>
-                <input type="tel" name="phone" class="form-control" required />
-              </div>
-              <div class="col-12">
-                <label class="form-label">Street Address *</label>
-                <input type="text" name="address" class="form-control" placeholder="123 Organic Street" required />
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">Town / City *</label>
-                <input type="text" name="city" class="form-control" required />
-              </div>
-              <div class="col-md-6">
-                <label class="form-label">Postal Code *</label>
-                <input type="text" name="postal_code" class="form-control" required />
+            {% else %}
+              <input type="hidden" name="selected_address_id" value="new">
+            {% endif %}
+
+
+            <!-- 2. NEW ADDRESS FORM SECTION -->
+            <div id="new-address-form" style="display:{% if saved_addresses %}none{% else %}block{% endif %};" class="bg-light p-4 rounded mb-5">
+              <h3 class="mb-4">Shipping Address Detail</h3>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label">First Name *</label>
+                  <input type="text" name="first_name" class="form-control" value="{{ form.first_name.value|default:'' }}" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Last Name *</label>
+                  <input type="text" name="last_name" class="form-control" value="{{ form.last_name.value|default:'' }}" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Email Address *</label>
+                  <input type="email" name="email" class="form-control" value="{{ form.email.value|default:'' }}" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Phone Number *</label>
+                  <input type="tel" name="phone" class="form-control" value="{{ form.phone.value|default:'' }}" placeholder="+97112345678" />
+                </div>
+                <div class="col-12">
+                  <label class="form-label">Street Address *</label>
+                  <input type="text" name="address" class="form-control" placeholder="123 Organic Street" value="{{ form.address.value|default:'' }}" />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Town / City *</label>
+                  <input type="text" name="city" class="form-control" value="{{ form.city.value|default:'' }}"/>
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label">Postal Code *</label>
+                  <input type="text" name="postal_code" class="form-control" value="{{ form.postal_code.value|default:'' }}"/>
+                </div>
+                <div class="col-12 mt-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="save_address_for_later" id="saveAddress" checked />
+                    <label class="form-check-label" for="saveAddress">Save this address for future orders</label>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- RIGHT SIDE: Order Summary & Payment -->
+
+            <!-- 3. PAYMENT METHOD SECTION -->
+            <!-- Note: Placed OUTSIDE the new-address-form so it's always visible! -->
+            <div class="bg-light p-4 rounded mb-5">
+              <h3 class="mb-4">Payment Method</h3>
+              <div class="bg-white p-4 rounded border">
+                
+                <div class="form-check mb-3">
+                  <input class="form-check-input payment-radio" type="radio" name="payment_method" id="payCOD" value="COD" checked />
+                  <label class="form-check-label fw-bold" for="payCOD"><i class="fa fa-money-bill-wave text-success me-2"></i> Cash on Delivery (COD)</label>
+                  <div class="text-muted small ms-4">Pay with cash upon delivery.</div>
+                </div>
+
+                <hr>
+
+                <div class="form-check mb-2">
+                  <input class="form-check-input payment-radio" type="radio" name="payment_method" id="payCard" value="Stripe" />
+                  <label class="form-check-label fw-bold" for="payCard"><i class="fa fa-credit-card text-primary me-2"></i> Credit / Debit Card</label>
+                </div>
+
+                <div id="stripe-card-box" class="ms-4 mt-3 p-3 border rounded bg-light" style="display: none;">
+                  <label for="card-element" class="form-label">Enter Card Details</label>
+                  <div id="card-element" class="form-control bg-white py-2"></div>
+                  <div id="card-errors" class="text-danger small mt-2" role="alert"></div>
+                </div>
+
+              </div>
+              <input type="hidden" name="stripeToken" id="stripeToken" />
+            </div>
+
+          </div> <!-- /LEFT COLUMN END -->
+
+
+          <!-- ==========================================
+               RIGHT COLUMN: ORDER SUMMARY
+               ========================================== -->
           <div class="col-lg-5 col-xl-4 wow fadeInRight" data-wow-delay="0.1s">
-            <div class="bg-light rounded p-4">
+            <div class="bg-light rounded p-4 sticky-top" style="top: 100px;">
               <h3 class="mb-4">Order Summary</h3>
-
-              <!-- Cart Items Loop -->
+              
               <div class="border-bottom pb-3 mb-3">
                 <div class="d-flex justify-content-between mb-3 fw-bold">
                   <span>Product</span>
                   <span>Total</span>
                 </div>
-
                 {% for item in cart %}
                   <div class="d-flex justify-content-between mb-2">
                     <span>{{ item.product.name }} <span class="text-muted">x {{ item.quantity }}</span></span>
@@ -75,7 +150,6 @@
                 {% endfor %}
               </div>
 
-              <!-- Subtotal & Shipping -->
               <div class="border-bottom pb-3 mb-3">
                 <div class="d-flex justify-content-between mb-2">
                   <span>Subtotal</span>
@@ -87,26 +161,23 @@
                 </div>
               </div>
 
-              <!-- Grand Total -->
               <div class="d-flex justify-content-between mb-4">
                 <h4 class="mb-0">Grand Total</h4>
                 <h4 class="mb-0 text-primary">${{ cart.get_total_price }}</h4>
               </div>
-
-              <!-- Payment Information (Placeholder for Stripe later) -->
+              
               <div class="mb-4">
                 <p class="text-muted small">
-                  <i class="fa fa-lock me-2 text-primary"></i>Your personal data will be used to process your order and support your experience throughout this website.
+                  <i class="fa fa-lock me-2 text-primary"></i> Your personal data will be used to process your order and support your experience throughout this website.
                 </p>
               </div>
-
-              <!-- Submit Button -->
-              <button type="submit" class="btn btn-primary w-100 py-3">Place Order</button>
+              
+              <button type="submit" class="btn btn-primary w-100 py-3 fs-5">Place Order</button>
             </div>
-          </div>
-        </div>
+          </div> <!-- /RIGHT COLUMN END -->
+
+        </div> <!-- /MAIN GRID ROW END -->
       </form>
     </div>
   </div>
-  <!-- Checkout Section End -->
 {% endblock %}

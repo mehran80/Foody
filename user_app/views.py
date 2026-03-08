@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import CustomUserCreationForm, UserUpdateForm
 from django.urls import reverse
+from order_app.models import Order
 # Create your views here.
 def login_view(request):
     if request.method == 'POST':
@@ -56,11 +57,7 @@ def user_dashboard(request):
     else:
         form = UserUpdateForm(instance=user)
 
-    customer_orders = [ # Placeholder data
-        {'id': 101, 'date': '2023-11-10', 'total': 45.50, 'status': 'Pending'},
-        {'id': 100, 'date': '2023-11-05', 'total': 78.00, 'status': 'Completed'},
-        {'id': 99, 'date': '2023-10-30', 'total': 22.10, 'status': 'Cancelled'},
-    ]
+    customer_orders = Order.objects.filter(user=request.user)
     active_tab = request.GET.get('tab', 'wishlist')
     context = {
         'form':form,

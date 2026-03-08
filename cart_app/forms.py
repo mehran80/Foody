@@ -1,9 +1,9 @@
 from django.conf import settings
 from django import forms
-from order_app.models import Order
+from user_app.models import ShippingAddress
 
 
-class CheckoutForm(forms.Form):
+class CheckoutForm(forms.ModelForm):
     class Meta:
-        model = Order
+        model = ShippingAddress
         fields = ['first_name', 'last_name', 'email', 'phone', 'address', 'city', 'postal_code']

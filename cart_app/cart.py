@@ -30,7 +30,14 @@ class Cart(object):
             self.save()
 
     def get_total_price(self):
-        return sum(float(item['price']) * item['quantity'] for item in self.cart.values())
+        total = 0
+        for item in self.cart.values():
+            try:
+                price = float(item['price'])
+                total += price * item['quantity']
+            except(ValueError, TypeError):
+                print(f'invalid price in cart:{item}')
+        return total
     
     def clear(self):
         del self.session['cart']
@@ -43,7 +50,8 @@ class Cart(object):
         product_ids = self.cart.keys()
         products = Product.objects.filter(id__in=product_ids)
         for product in products:
-            cart_item = self.cart[str(product.id)]
+            cart_item = self.cart[str(product.pk)]
             cart_item['product'] = product
-            cart_item['total_price'] = float(cart_item['price']) * cart_item['quantity']
+            cart_item['price'] = float(cart_item['price'])
+            cart_item['total_price'] = cart_item['price'] * cart_item['quantity']
             yield cart_item

@@ -172,5 +172,8 @@ def create_order_from_address(user, address_obj, cart, payment_method):
             price=item['price']
         )
 
+        product.stock -= item['quantity']
+        product.save()
+
     cart.clear()
     return order

@@ -1,33 +1,99 @@
+{% load static %}
+<h2 class="mb-4 text-primary"><i class="fa fa-warehouse me-2"></i> Warehouse Management</h2>
 
-<div class="tab-pane fade" id="tab-orders">
-  <h3 class="mb-4">Customer Orders</h3>
-  <div class="table-responsive bg-white p-3 rounded shadow-sm">
-    <table class="table table-hover">
-      <thead class="table-dark">
-        <tr>
-          <th>Order ID</th>
-          <th>Customer</th>
-          <th>Date</th>
-          <th>Total</th>
-          <th>Status</th>
-          <th>Details</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>#FD-9921</td>
-          <td>Fareed Khan</td>
-          <td>20 Oct, 2025</td>
-          <td>$45.50</td>
-          <td>
-            <span class="badge badge-pending">Pending</span>
-          </td>
-          <td>
-            <button class="btn btn-sm btn-secondary">View</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+<!-- Tabs Navigation -->
+<ul class="nav nav-pills mb-4" id="orderTabs">
+  <li class="nav-item">
+    <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#pending">New Orders ({{ pending_count }})</button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#preparing">In Preparation ({{ preparing_count }})</button>
+  </li>
+</ul>
+
+<!-- Tabs Content -->
+<div class="tab-content">
+  <!-- PENDING ORDERS -->
+  <div class="tab-pane fade show active" id="pending">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Order #</th>
+            <th>Customer</th>
+            <th>Total</th>
+            <th>Payment</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in pending_orders %}
+            <tr>
+              <td>
+                <strong>#{{ order.id }}</strong>
+              </td>
+              <td>
+                {{ order.first_name }} {{ order.last_name }}<br /><small class="text-muted">{{ order.phone }}</small>
+              </td>
+              <td>${{ order.total_price }}</td>
+              <td>
+                <span class="badge bg-info">{{ order.payment_method }}</span>
+              </td>
+              <td>
+                <form method="POST" action="">
+                  {% csrf_token %}
+                  <input type="hidden" name="status" value="PREPARING" />
+                  <button type="submit" class="btn btn-sm btn-success">Start Packing</button>
+                </form>
+              </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="5" class="text-center">No new orders found.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PREPARING ORDERS -->
+  <div class="tab-pane fade" id="preparing">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Order #</th>
+            <th>Address</th>
+            <th>Items</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in preparing_orders %}
+            <tr>
+              <td>
+                <strong>#{{ order.id }}</strong>
+              </td>
+              <td>{{ order.address }}, {{ order.city }}</td>
+              <td>
+                <ul class="list-unstyled mb-0">
+                  {% for item in order.items.all %}
+                    <li>{{ item.quantity }}x {{ item.product.name }}</li>
+                  {% endfor %}
+                </ul>
+              </td>
+              <td>
+                <form method="POST" action="{% url 'update_order_status' order.id %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="status" value="SHIPPED" />
+                  <button type="submit" class="btn btn-sm btn-primary">Mark as Shipped</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
-

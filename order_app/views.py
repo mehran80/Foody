@@ -23,7 +23,7 @@ def payment_process(request, order_id):
             description= f'Foody order #{order.id}',
             source=stripe_token
         )
-        order.status = 'Paid'
+        order.payment_status = 'Paid'
         order.save()
 
         del request.session['stripe_token']

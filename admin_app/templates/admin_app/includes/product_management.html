@@ -1,66 +1,152 @@
 {% load static %}
-<div class="tab-pane fade" id="tab-products">
-  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
-    <h3 class="mb-2 mb-md-0">Manage Inventory</h3>
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">+ Add Product</button>
-  </div>
-  <div class="table-responsive bg-white p-3 rounded shadow-sm">
-    <table class="table table-hover align-middle">
-      <thead class="table-light">
-        <tr>
-          <th>Image</th>
-          <th>Name</th>
-          <th>Price</th>
-          <th>Stock</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for product in products %}
-          <tr id="product-row-{{product.id}}">
-            <td id="product-image-{{product.id}}" class="product-image">
-              {% if product.images %}
-              <img src="{{ product.images.url }}" alt="{{ product.name }}" class="img-fluid" width="100" height="100"/>
-              {% else %}
-              <img src="{% static 'core/img/placeholder.png' %}" alt="No Image" class="img-fluid" style="width: 50px; height: 50px; object-fit: cover; opacity: 0.5;"/>
-              {% endif %}
-            </td>
-            <td>{{ product.name }}</td>
-            <td>${{ product.price }}</td>
-            <td>{{ product.stock }} kg</td>
-            {% if product.is_available == True %}
-            <td>
-              <span class="badge bg-success">Available</span>
-            </td>
-            {% else %}  
-            <td>
-              <span class="badge bg-danger">Unavailable</span>
-            </td>
-            {% endif %}
-            <td>
-              <button class="btn btn-sm btn-outline-primary update-product-btn"
-                      data-product-id="{{ product.id }}"
-                      data-product-name="{{ product.name }}"
-                      data-product-description="{{ product.description }}"
-                      data-product-price="{{ product.price }}"
-                      data-product-images="{% if product.images %}{{ product.images.url }}{% endif %}"
-                      data-product-category="{{ product.category.id }}"
-                      data-product-stock="{{ product.stock }}"
-                      data-product-availability="{{ product.is_available }}"
-                      
-                      data-edit-url="{% url 'product_app:edit_product' product.id %}">
-                      <i class="fa fa-edit"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger delete-product-btn"
-               data-product-id="{{ product.id }}"
-               data-delete-url="{% url 'product_app:delete_product' product.id %}">
-                <i class="fa fa-trash"></i>
-              </button>
-            </td>
+<h2 class="mb-4 text-primary"><i class="fa fa-leaf me-2"></i> Inventory Management</h2>
+
+<!-- Nested Tabs -->
+<ul class="nav nav-pills mb-4">
+  <li class="nav-item">
+    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#prod-list">Product List</button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#prod-add">Add Product</button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#prod-low-stock">
+      Low Stock Alerts{% if low_stock_products %}
+        <span class="badge bg-danger ms-2">{{ low_stock_products.count }}</span>
+      {% endif %}
+    </button>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <!-- TAB 1: PRODUCT LIST & SEARCH -->
+  <div class="tab-pane fade show active" id="prod-list">
+    <div class="mb-3 d-flex justify-content-between">
+      <input type="text" id="productSearch" class="form-control w-50" placeholder="Search products..." />
+    </div>
+    <div class="table-responsive bg-white p-3 rounded shadow-sm">
+      <table class="table table-hover align-middle" id="productTable">
+        <thead class="table-light">
+          <tr>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Discount</th>
+            <th>Status</th>
+            <th>Action</th>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% for product in products %}
+            <tr>
+              <td id="product-image-{{product.id}}" class="product-image">
+                {% if product.images %}
+                  <img src="{{ product.images.url }}" alt="{{ product.name }}" class="img-fluid" width="100" height="100"/>
+                {% else %}
+                <img src="{% static 'core/img/placeholder.png' %}" alt="No Image" class="img-fluid" style="width: 50px; height: 50px; object-fit: cover; opacity: 0.5;"/>
+                {% endif %}
+              </td>
+              <td class="product-name">{{ product.name }}</td>
+              <td class="product-price">${{ product.price }}</td>
+              <td class="product-stock">{{ product.stock }} kg</td>
+              <td class="product-discount_percentage">{{ product.discount_percentage }} %</td>
+              <td class="product-availability">
+                <span class="badge {% if product.is_available %}
+                    bg-success
+                  {% else %}
+                    bg-danger
+                  {% endif %}">
+                  {{ product.is_available|yesno:'Available,Unavailable' }}
+                </span>
+              </td>
+              <td>
+                <!-- Edit Button links to a separate edit tab or keeps the modal -->
+                <button class="btn btn-sm btn-outline-primary update-product-btn"
+                  data-product-id="{{product.id}}"
+                  data-product-name="{{product.name}}"
+                  data-product-price="{{product.price}}"
+                  data-product-stock="{{product.stock}}"
+                  data-discount-percentage="{product.discount_percentage }"
+                  data-product-images="{% if product.images %}{{ product.images.url }}{% endif %}"
+                  data-product-description="{{product.description}}"
+                  data-product-category="{{product.category.id}}"
+                  data-product-availability="{{ product.is_available }}"
+                  data-edit-url="{% url 'product_app:edit_product' product.id %}"
+                  >
+                  <i class="fa fa-edit"></i>
+                </button>
+                <button class="btn btn-sm btn-outline-danger delete-product-btn"
+                    data-product-id="{{ product.id }}"
+                    data-delete-url="{% url 'product_app:delete_product' product.id %}">
+                    <i class="fa fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 2: ADD PRODUCT -->
+  <div class="tab-pane fade" id="prod-add">
+    <div class="bg-white p-4 rounded shadow-sm">
+      <form method="POST" enctype="multipart/form-data" action="{% url 'product_app:add_products' %}">
+        {% csrf_token %}
+        <div class="row g-3">{{ form.as_p }}</div>
+        <button type="submit" class="btn btn-primary mt-3">Save Product</button>
+      </form>
+    </div>
+  </div>
+  <!-- TAB 3: LOW STOCK ALERTS -->
+  <div class="tab-pane fade" id="prod-low-stock">
+    <div class="bg-white p-4 rounded shadow-sm">
+      <h4 class="text-danger mb-4"><i class="fa fa-exclamation-circle me-2"></i> Items Needing Restock</h4>
+
+      {% if low_stock_products %}
+        <table class="table table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Product</th>
+              <th>Current Stock</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in low_stock_products %}
+              <tr>
+                <td>
+                  <strong>{{ product.name }}</strong>
+                </td>
+                <td>
+                  <span class="badge bg-warning text-dark">{{ product.stock }} kg</span>
+                </td>
+                <td>
+                  <!-- You could link to an edit modal here -->
+                  <button class="btn btn-sm btn-primary update-product-btn" data-product-id="{{ product.id }}">Restock</button>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div class="alert alert-success">
+          <i class="fa fa-check-circle me-2"></i> All inventory levels are healthy.
+        </div>
+      {% endif %}
+    </div>
   </div>
 </div>
+
+<script>
+// Simple Search Bar Logic
+document.getElementById('productSearch').addEventListener('keyup', function() {
+    let filter = this.value.toLowerCase();
+    let rows = document.querySelectorAll('#productTable tbody tr');
+    rows.forEach(row => {
+        let text = row.innerText.toLowerCase();
+        row.style.display = text.includes(filter) ? '' : 'none';
+    });
+});
+</script>

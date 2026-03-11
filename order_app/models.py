@@ -5,13 +5,20 @@ from product_app.models import Product
 # Create your models here.
 class Order(models.Model):
     id = models.BigAutoField(primary_key=True)
-    STATUS_CHOICES = [
+    SHIPMENT_STATUS_CHOICES = [
         ('PENDING', 'Pending'),
-        ('PAID', 'Paid'),
+        ('PREPARING', 'Preparing'),
         ('SHIPPED', 'Shipped'),
         ('DELIVERED', 'Delivered'),
         ('CANCELLED', 'Cancelled'),
     ]
+
+    PAYMENT_STATUS_CHOICES = [
+        ('UNPAID', 'Unpaid'),
+        ('PAID', 'Paid'),
+        ('REFUNDED', 'Refunded'),
+    ]
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
 
     # Shipping information
@@ -27,7 +34,8 @@ class Order(models.Model):
     # Order details
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     total_paid = models.DecimalField(max_digits=10, decimal_places=2)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='PENDING')
+    shipment_status = models.CharField(max_length=20, choices=SHIPMENT_STATUS_CHOICES, default='PENDING')
+    payment_status = models.CharField(max_length=20, choices=PAYMENT_STATUS_CHOICES, default='UNPAID')
     payment_method= models.CharField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

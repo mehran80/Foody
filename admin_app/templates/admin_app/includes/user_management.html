@@ -1,34 +1,92 @@
+
 {% load static %}
-<div class="tab-pane fade" id="tab-users">
-  <h3 class="mb-4">Registered Customers</h3>
-  <div class="table-responsive bg-white p-3 rounded shadow-sm">
-    <table class="table table-hover">
-      <thead class="table-light">
-        <tr>
-          <th>User ID</th>
-          <th>Full Name</th>
-          <th>Email</th>
-          <th>Joined Date</th>
-          <th>Status</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for user in users %}
-          <tr>
-            <td>{{ user.id }}</td>
-            <td>{{ user.full_name }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.date_joined|date:'d M, Y' }}</td>
-            <td>
-              <span class="badge bg-success">Active</span>
-            </td>
-            <td>
-              <button class="btn btn-sm btn-danger">Block</button>
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+<h2 class="mb-4 text-primary"><i class="fa fa-users me-2"></i> User Management</h2>
+<ul class="nav nav-pills mb-4">
+  <li class="nav-item">
+    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#user-list">User List</button>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <!-- TAB: USER LIST -->
+  <div class="tab-pane fade show active" id="user-list">
+    <div class="table-responsive bg-white p-3 rounded shadow-sm">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Role / Permissions</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+            <tr>
+              <td><strong>{{ user.username }}</strong></td>
+              <td>{{ user.email }}</td>
+              <td>
+                <!-- Permission Badges -->
+                {% if user.is_superuser %}
+                  <span class="badge bg-danger">Superuser</span>
+                {% elif user.is_staff %}
+                  <span class="badge bg-warning text-dark">Staff</span>
+                {% else %}
+                  <span class="badge bg-secondary">Customer</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if user.is_active %}
+                  <span class="text-success"><i class="fa fa-check-circle"></i> Active</span>
+                {% else %}
+                  <span class="text-danger"><i class="fa fa-times-circle"></i> Banned</span>
+                {% endif %}
+              </td>
+              <td>
+                <!-- Action Buttons -->
+                <button class="btn btn-sm btn-outline-primary" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#editUserModal-{{ user.id }}">
+                                    <i class="fa fa-user-shield"></i>
+                </button>
+
+                            <!-- Modal for Permissions -->
+                <div class="modal fade" id="editUserModal-{{ user.id }}" tabindex="-1">
+                  <div class="modal-dialog">
+                    <form method="POST" action="{% url 'admin_app:update_user_permissions' user.id %}" class="modal-content">
+                      {% csrf_token %}
+                      <div class="modal-header">
+                        <h5 class="modal-title">Edit Permissions: {{ user.username }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="form-check form-switch mb-3">
+                          <input class="form-check-input" type="checkbox" name="is_staff" id="staff-{{ user.id }}" {% if user.is_staff %}checked{% endif %}>
+                          <label class="form-check-label" for="staff-{{ user.id }}">Staff Access (Can access dashboard)</label>
+                        </div>
+                        <div class="form-check form-switch mb-3">
+                          <input class="form-check-input" type="checkbox" name="is_active" id="active-{{ user.id }}" {% if user.is_active %}checked{% endif %}>
+                          <label class="form-check-label" for="active-{{ user.id }}">Account Active</label>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save Permissions</button>
+                      </div>
+                    <form>
+                  </div>
+                </div>
+                <form method="POST" action="{% url 'admin_app:delete_user' user.id %}" style="display:inline;">
+                  {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this user?')">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

@@ -6,7 +6,8 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
-        <form id="editProductForm">
+        <form id="editProductForm" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
           <input type="hidden" id="editProductId" />
 
           <div class="mb-3">
@@ -55,6 +56,10 @@
               <option value="True">Available</option>
               <option value="False">Unavailable</option>
             </select>
+          </div>
+          <div class="mb-3">
+              <label for="editDiscount" class="form-label">Discount Percentage</label>
+              <input type="number" class="form-control" id="editDiscount" name="discount_percentage" step="0.01" value="0" />
           </div>
 
           <button type="submit" class="btn btn-primary">Save Product</button>

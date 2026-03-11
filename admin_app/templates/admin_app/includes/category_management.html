@@ -1,39 +1,54 @@
-{% load static %}
-<div class="tab-pane fade" id="tab-category">
-  <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
-    <h3 class="mb-2 mb-md-0">Manage Categories</h3>
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategoryModal">+ Add Category</button>
-  </div>
-  <div class="table-responsive bg-white p-3 rounded shadow-sm">
-    <table class="table table-hover align-middle">
-      <thead class="table-light">
-        <tr>
-          <th>Name</th>
-          <th>Total Products</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for category in categories %}
-          <tr id="category-row-{{category.id}}">
-            <td id="category-name-{{category.id}}" class="category-name">{{ category.name }}</td>
-            <td>{{ category.products.count }}</td>
-            <td>
-              <button class="btn btn-sm btn-outline-primary update-category-btn"
-                      data-category-id="{{category.id}}"
-                      data-category-name="{{category.name}}"
-                      data-edit-url="{% url 'product_app:edit_category' category.id %}">
-                      <i class="fa fa-edit"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger delete-category-btn"
-                      data-category-id="{{category.id}}"
-                      data-delete-url="{% url 'product_app:delete_category' category.id %}">
-                      <i class="fa fa-trash"></i>
-              </button>
-            </td>
+<h2 class="mb-4 text-primary"><i class="fa fa-list me-2"></i> Category Management</h2>
+<!-- Nav Tabs for Category Management -->
+<ul class="nav nav-pills mb-4" id="categoryTabs" role="tablist">
+  <li class="nav-item">
+    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#cat-list"><i class="fa fa-list me-2"></i>Category List</button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#cat-add"><i class="fa fa-plus me-2"></i>Add Category</button>
+  </li>
+</ul>
+
+<div class="tab-content">
+  <!-- TAB 1: CATEGORY LIST -->
+  <div class="tab-pane fade show active" id="cat-list">
+    <div class="table-responsive bg-white p-3 rounded shadow-sm">
+      <table class="table table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Name</th>
+            <th>Total Products</th>
+            <th>Action</th>
           </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {% for category in categories %}
+            <tr id="category-row-{{ category.id }}">
+              <td id="category-name-{{ category.id }}" class="category-name">{{ category.name }}</td>
+              <td>
+                <span class="badge bg-secondary">{{ category.products.count }}</span>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-outline-primary update-category-btn" data-category-id="{{ category.id }}" data-category-name="{{ category.name }}" data-edit-url="{% url 'product_app:edit_category' category.id %}"><i class="fa fa-edit"></i></button>
+                <button class="btn btn-sm btn-outline-danger delete-category-btn" data-category-id="{{ category.id }}" data-delete-url="{% url 'product_app:delete_category' category.id %}"><i class="fa fa-trash"></i></button>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 2: ADD CATEGORY FORM -->
+  <div class="tab-pane fade" id="cat-add">
+    <div class="bg-white p-4 rounded shadow-sm">
+      <h4 class="mb-4">Create New Category</h4>
+      <form method="POST" enctype="multipart/form-data" action="{% url 'product_app:add_categories' %}">
+        {% csrf_token %}
+        <!-- Rendering form fields directly inside the tab -->
+        <div class="mb-3">{{ category_form.as_p }}</div>
+        <button type="submit" class="btn btn-primary px-4">Save Category</button>
+      </form>
+    </div>
   </div>
 </div>

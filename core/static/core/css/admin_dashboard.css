@@ -47,3 +47,26 @@
     background-color: #3cb815;
     color: #fff;
 }
+
+
+.modal-backdrop {
+    z-index: 1050 !important;
+    background-color: #000 !important;
+    opacity: 0.5 !important;
+}
+
+.modal {
+    z-index: 1060 !important;
+}
+
+.modal-dialog {
+    z-index: 1061 !important;
+    background-color: #ffffff !important;
+}
+
+.modal-content {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #000 !important;
+    opacity: 1 !important;
+}

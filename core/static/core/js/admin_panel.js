@@ -1,14 +1,14 @@
 // Initialize active tab from URL hash
-  document.addEventListener('DOMContentLoaded', function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const tab = urlParams.get('tab');
-    if (tab) {
-      const tabButton = document.querySelector(`[data-bs-target="#tab-${tab}"]`);
-      if (tabButton) {
-        tabButton.show();
-      }
-    }
-  });
+//   document.addEventListener('DOMContentLoaded', function() {
+//     const urlParams = new URLSearchParams(window.location.search);
+//     const tab = urlParams.get('tab');
+//     if (tab) {
+//       const tabButton = document.querySelector(`[data-bs-target="#tab-${tab}"]`);
+//       if (tabButton) {
+//         tabButton.show();
+//       }
+//     }
+//   });
 
 // Function to get CSRF token from cookies
 // This function retrieves the value of a specified cookie, which is necessary for including the CSRF token in AJAX requests to protect against cross-site request forgery attacks. It checks if the document has cookies, splits them into an array, and iterates through them to find the one that matches the specified name. If found, it decodes and returns the cookie value; otherwise, it returns null.
@@ -45,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const productImages = buttonEdit.dataset.productImages;
         const productDescription = buttonEdit.dataset.productDescription;
         const editUrl = buttonEdit.dataset.editUrl;
+        const discount_percentage = buttonEdit.dataset.discountPercentage;
 
         // Update the edit modal with product details
         document.getElementById('editProductId').value = productId;
@@ -53,6 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('editProductPrice').value = productPrice;
         document.getElementById('editProductCategory').value = buttonEdit.dataset.productCategory;
         document.getElementById('editProductStock').value = productStock;
+        document.getElementById('editDiscount').value = discount_percentage;
         
         // FIX: Directly assign the string "True" or "False"
         document.getElementById('editProductAvailability').value = productAvailability;
@@ -114,10 +116,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         const priceCell = rowToUpdate.querySelector('.product-price');
                         const stockCell = rowToUpdate.querySelector('.product-stock');
                         const availabilityCell = rowToUpdate.querySelector('.product-availability');
+                        const discountCell = rowToUpdate.querySelector('.discount-percentage');
                         
                         if(nameCell) nameCell.textContent = formData.get('name');
                         if(priceCell) priceCell.textContent = `$${formData.get('price')}`;
                         if(stockCell) stockCell.textContent = `${formData.get('stock')} kg`;
+                        if(discountCell) discountCell.textContent = `${formData.get('discount_price')}%`;
                         
                         if(availabilityCell) {
                             const isAvail = formData.get('is_available') === 'True';
@@ -140,6 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             btn.dataset.productDescription = formData.get('description');
                             btn.dataset.productAvailability = formData.get('is_available');
                             btn.dataset.productCategory = formData.get('category');
+                            btn.dataset.discountPercentage = formData.get('discount_percentage');
                             if (data.new_image_url) btn.dataset.productImages = data.new_image_url;
                         }
                     }
@@ -154,7 +159,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     alert('Product updated successfully.');
                     
                 } else {
-                    console.log(data.errors);
                     alert('Error updating product. Please check the form.');
                 }
             })

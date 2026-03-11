@@ -106,6 +106,7 @@ def edit_product(request, product_id):
     if request.method == 'POST':
         product = get_object_or_404(Product, id=product_id)
         form = ProductForm(request.POST, request.FILES, instance=product)
+        
         if form.is_valid():
             form.save()
 
@@ -118,6 +119,7 @@ def edit_product(request, product_id):
                 response['image_url'] = product.images.url
             return JsonResponse(response)
         else:
+            print(form.errors)
             return JsonResponse({'status': 'error', 'message': 'Invalid form data.'})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})

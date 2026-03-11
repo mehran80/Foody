@@ -1,4 +1,4 @@
-{% extends 'core/base.html' %}
+{% extends 'admin_app/admin_base.html' %}
 {% load static %}
 
 {% block content %}
@@ -29,11 +29,11 @@
       <div class="col-lg-10 ps-lg-4 mt-4 mt-lg-0">
         <div class="tab-content">
           <!-- INCLUDES START HERE -->
-          {% include 'admin_app/includes/overview.html' %}
-          {% include 'admin_app/includes/product_management.html' %}
-          {% include 'admin_app/includes/category_management.html' %}
-          {% include 'admin_app/includes/order_management.html' %}
-          {% include 'admin_app/includes/user_management.html' %}
+          <div class="tab-pane fade show active" id="tab-overview">{% include 'admin_app/includes/overview.html' %}</div>
+          <div class="tab-pane fade" id="tab-products">{% include 'admin_app/includes/product_management.html' %}</div>
+          <div class="tab-pane fade" id="tab-category">{% include 'admin_app/includes/category_management.html' %}</div>
+          <div class="tab-pane fade" id="tab-orders">{% include 'admin_app/includes/order_management.html' %}</div>
+          <div class="tab-pane fade" id="tab-users">{% include 'admin_app/includes/user_management.html' %}</div>
         </div>
       </div>
     </div>

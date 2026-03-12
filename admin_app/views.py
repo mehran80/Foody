@@ -1,5 +1,4 @@
-from django.shortcuts import render , redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render 
 from product_app.forms import ProductForm, CategoryForm
 from django.contrib.auth import get_user_model
 from django.db.models import Count, Q
@@ -26,7 +25,7 @@ def admin_pannel(request):
         pending_count = Count('id', filter=Q(shipment_status='PENDING')),
         preparing_count = Count('id', filter=Q(shipment_status='PREPARING')),
         shipped_count = Count('id', filter=Q(shipment_status='SHIPPED')),
-        deliverd_count = Count('id', filter=Q(shipment_status='DELIVERED')),
+        delivered_count = Count('id', filter=Q(shipment_status='DELIVERED')),
         cancelled_count = Count('id', filter=Q(shipment_status='CANCELLED'))
     )
 
@@ -42,7 +41,7 @@ def admin_pannel(request):
         'pending_orders': all_orders.filter(shipment_status='PENDING'),
         'preparing_orders': all_orders.filter(shipment_status='PREPARING'),
         'shipped_orders': all_orders.filter(shipment_status='SHIPPED'),
-        'deliverd_orders': all_orders.filter(shipment_status='DELIVERED'),
+        'delivered_orders': all_orders.filter(shipment_status='DELIVERED'),
         'cancelled_orders': all_orders.filter(shipment_status='CANCELLED'),
     }
 
@@ -51,18 +50,3 @@ def admin_pannel(request):
     return render(request, 'admin_app/admin_panel.html', context)
 
 
-
-def delete_user(request, user_id):
-    user = get_object_or_404(User, id=user_id)
-    user.delete()
-    return redirect('admin_app:admin_dashboard')
-
-
-def user_permissions(request, user_id):
-    if request.method == 'POST':
-        user = get_object_or_404(User, id=user_id)
-        # Update staff status based on checkbox
-        user.is_staff = request.POST.get('is_staff') == 'on'
-        user.is_active = request.POST.get('is_active') == 'on'
-        user.save()
-    return redirect('admin_app:admin_dashboard')

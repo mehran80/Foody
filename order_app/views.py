@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
+from django.http import JsonResponse
 import stripe
 from order_app.models import Order
 from cart_app.cart import Cart
@@ -43,3 +44,15 @@ def success_order(request, order_id):
     context = {'order':order}
 
     return render(request, 'order_app/order_success.html', context)
+
+
+
+def update_order_status(request, id):
+    if request.method == 'POST':
+        order = get_object_or_404(Order, id=id)
+        new_status = request.POST.get('status')
+        order.shipment_status = new_status
+        order.save()
+
+        return JsonResponse({'status': 'success' , 'new_status': new_status })
+    return JsonResponse({'status': 'error'}, status=400)

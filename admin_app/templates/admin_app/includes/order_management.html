@@ -9,91 +9,25 @@
   <li class="nav-item">
     <button class="nav-link" data-bs-toggle="tab" data-bs-target="#preparing">In Preparation ({{ preparing_count }})</button>
   </li>
+  <li class="nav-item">
+    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#shipped">Shipped ({{ shipped_count }})</button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#delivered">Delivered ({{ delivered_count }})</button>
+  </li>
+  <li class="nav-item">
+    <button class="nav-link" data-bs-toggle="tab" data-bs-target="#cancelled">Cancelled ({{ cancelled_count }})</button>
+  </li>
 </ul>
 
 <!-- Tabs Content -->
 <div class="tab-content">
-  <!-- PENDING ORDERS -->
-  <div class="tab-pane fade show active" id="pending">
-    <div class="table-responsive">
-      <table class="table table-hover align-middle">
-        <thead class="table-light">
-          <tr>
-            <th>Order #</th>
-            <th>Customer</th>
-            <th>Total</th>
-            <th>Payment</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for order in pending_orders %}
-            <tr>
-              <td>
-                <strong>#{{ order.id }}</strong>
-              </td>
-              <td>
-                {{ order.first_name }} {{ order.last_name }}<br /><small class="text-muted">{{ order.phone }}</small>
-              </td>
-              <td>${{ order.total_price }}</td>
-              <td>
-                <span class="badge bg-info">{{ order.payment_method }}</span>
-              </td>
-              <td>
-                <form method="POST" action="">
-                  {% csrf_token %}
-                  <input type="hidden" name="status" value="PREPARING" />
-                  <button type="submit" class="btn btn-sm btn-success">Start Packing</button>
-                </form>
-              </td>
-            </tr>
-          {% empty %}
-            <tr>
-              <td colspan="5" class="text-center">No new orders found.</td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
 
-  <!-- PREPARING ORDERS -->
-  <div class="tab-pane fade" id="preparing">
-    <div class="table-responsive">
-      <table class="table table-hover align-middle">
-        <thead class="table-light">
-          <tr>
-            <th>Order #</th>
-            <th>Address</th>
-            <th>Items</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for order in preparing_orders %}
-            <tr>
-              <td>
-                <strong>#{{ order.id }}</strong>
-              </td>
-              <td>{{ order.address }}, {{ order.city }}</td>
-              <td>
-                <ul class="list-unstyled mb-0">
-                  {% for item in order.items.all %}
-                    <li>{{ item.quantity }}x {{ item.product.name }}</li>
-                  {% endfor %}
-                </ul>
-              </td>
-              <td>
-                <form method="POST" action="{% url 'update_order_status' order.id %}">
-                  {% csrf_token %}
-                  <input type="hidden" name="status" value="SHIPPED" />
-                  <button type="submit" class="btn btn-sm btn-primary">Mark as Shipped</button>
-                </form>
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
+  {% block content %}
+    {% include "admin_app/includes/order_management/pending_order.html" %}
+    {% include "admin_app/includes/order_management/preparing_order.html" %}
+    {% include "admin_app/includes/order_management/shipped_order.html" %}
+    {% include "admin_app/includes/order_management/delivered_order.html" %}
+    {% include "admin_app/includes/order_management/cancelled_order.html" %}
+  {% endblock content %}
 </div>

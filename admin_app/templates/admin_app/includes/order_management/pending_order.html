@@ -1,0 +1,45 @@
+{% load static %}
+
+<!-- PENDING ORDERS -->
+<div class="tab-pane fade show active" id="pending">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Order #</th>
+          <th>Customer</th>
+          <th>Total</th>
+          <th>Payment</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody class="pending-tbody">
+        {% for order in pending_orders %}
+          <tr>
+            <td>
+              <strong>#{{ order.id }}</strong>
+            </td>
+            <td>
+              {{ order.first_name }} {{ order.last_name }}<br /><small class="text-muted">{{ order.phone }}</small>
+            </td>
+            <td>${{ order.total_price }}</td>
+            <td>
+              <span class="badge bg-info">{{ order.payment_method }}</span>
+            </td>
+            <td>
+              <form method="POST" action="{% url 'order_app:update_order_status' order.id %}" class="status_update_form">
+                {% csrf_token %}
+                <input type="hidden" name="status" value="PREPARING" />
+                <button type="submit" class="btn btn-sm btn-success">Start Packing</button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5" class="text-center">No new orders found.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

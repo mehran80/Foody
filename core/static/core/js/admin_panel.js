@@ -363,3 +363,53 @@ if (editCategoryForm) {
         });
     });
 }
+
+document.addEventListener('DOMContentLoaded', function(){
+    document.body.addEventListener('submit', function(e){
+        if(e.target.classList.contains('status_update_form')){
+            e.preventDefault()
+
+            const form = e.target;
+            const formData = new FormData(form);
+            const url = form.action;
+            const row = form.closest('tr');
+
+            fetch(url,{
+                method: 'POST',
+                body: formData,
+                headers:{
+                    'X-CSRFToken': csrftoken
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status == 'success'){
+                    handleRowTransition(row, data.new_status);
+
+                    alert('order updated');
+                }
+            })
+        }
+    });
+});
+
+function handleRowTransition(row, newStatus){
+    const transitionMap = {
+        'PREPARING': '#preparing-tbody',
+        'SHIPPED': '#shipped-tbody',
+        'DELIVERD': '#delivered_tbody',
+        'CANCELLED': '#cancelled-tbody'
+    };
+
+    const targetTableId = transitionMap[newStatus];
+    
+    if(targetTableId){
+        const targetTableBody = document.querySelector(targetTableId);
+        targetTableBody.appendChild(row);
+
+        updateRowForNextStage(row, newStatus);
+    }
+    else{
+        row.remove();
+    }
+}

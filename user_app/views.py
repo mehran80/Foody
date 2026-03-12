@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -6,6 +6,9 @@ from django.contrib import messages
 from .forms import CustomUserCreationForm, UserUpdateForm
 from django.urls import reverse
 from order_app.models import Order
+from user_app.models import User
+
+
 # Create your views here.
 def login_view(request):
     if request.method == 'POST':
@@ -24,6 +27,8 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     return render(request,'user_app/login.html', {'form':form})
+
+
 
 def logout_view(request):
     logout(request)
@@ -65,4 +70,20 @@ def user_dashboard(request):
         'active_tab': active_tab
         }
     return render(request,'user_app/user_dashboard.html',context)
+
+
+def user_permissions(request, user_id):
+    if request.method == 'POST':
+        user = get_object_or_404(User, id=user_id)
+        # Update staff status based on checkbox
+        user.is_staff = request.POST.get('is_staff') == 'on'
+        user.is_active = request.POST.get('is_active') == 'on'
+        user.save()
+    return redirect('admin_app:admin_dashboard')
+
+
+def delete_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    user.delete()
+    return redirect('admin_app:admin_dashboard')
 

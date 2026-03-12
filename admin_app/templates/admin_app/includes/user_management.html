@@ -54,7 +54,7 @@
                             <!-- Modal for Permissions -->
                 <div class="modal fade" id="editUserModal-{{ user.id }}" tabindex="-1">
                   <div class="modal-dialog">
-                    <form method="POST" action="{% url 'admin_app:update_user_permissions' user.id %}" class="modal-content">
+                    <form method="POST" action="{% url 'user_app:update_user_permissions' user.id %}" class="modal-content">
                       {% csrf_token %}
                       <div class="modal-header">
                         <h5 class="modal-title">Edit Permissions: {{ user.username }}</h5>
@@ -76,7 +76,7 @@
                     <form>
                   </div>
                 </div>
-                <form method="POST" action="{% url 'admin_app:delete_user' user.id %}" style="display:inline;">
+                <form method="POST" action="{% url 'user_app:delete_user' user.id %}" style="display:inline;">
                   {% csrf_token %}
                     <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Delete this user?')">
                       <i class="fa fa-trash"></i>
